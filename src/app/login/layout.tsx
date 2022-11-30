@@ -5,9 +5,7 @@ import logo from '../../../public/logo-beta.svg'
 
 import styles from './login.layout.module.scss'
 
-export default async function LoginLayout({ children, ...props }) {
-    console.log(props)
-
+export default async function LoginLayout({ children }) {
     return (
         <div className={styles.page_container}>
             <main className={styles.main}>
@@ -21,7 +19,7 @@ export default async function LoginLayout({ children, ...props }) {
             </main>
             <footer className={styles.footer}>
                 <hr className={styles.rule} />
-                <span>&copy; 2022 AetherScout LLC</span>
+                <span>&copy; 2022 Team 303 Aether</span>
             </footer>
         </div>
     )

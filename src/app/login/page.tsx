@@ -20,9 +20,9 @@ const checkLoginState = async (redirectPath: string | string[]) => {
     if (loggedIn?.value === 'true') redirect(path)
 }
 
-const Login = async ({ searchParams }) => {
+const Login = async props => {
     // Request will be redirected if the user is already logged in
-    await checkLoginState(searchParams.redirect)
+    await checkLoginState(props.searchParams.redirect)
 
     return (
         <div className={styles.wrapper}>
