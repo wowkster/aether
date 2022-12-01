@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 import logo from '../../../public/logo-beta.svg'
 
-import styles from './login.layout.module.scss'
+import styles from './auth.layout.module.scss'
 
 export default async function LoginLayout({ children }) {
     return (

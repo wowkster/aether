@@ -1,4 +1,9 @@
+import Image from 'next/image'
+
 import styles from './page.module.scss'
+
+import logo from '../../../public/logo-beta.svg'
+import Link from 'next/link'
 
 const getData = (): Promise<object> => new Promise(res => setTimeout(() => res({ your: 'mom' }), 1000))
 
@@ -10,6 +15,7 @@ export default async function Home() {
     for (let i = 100; i < 1000; i += 100) {
         elements.push(
             <h3
+                key={i}
                 style={{
                     fontWeight: i,
                 }}>
@@ -18,6 +24,7 @@ export default async function Home() {
         )
         elements.push(
             <h3
+                key={i + '-italic'}
                 style={{
                     fontWeight: i,
                     fontStyle: 'italic',
@@ -28,11 +35,15 @@ export default async function Home() {
     }
 
     return (
-        <>
-            <p>Welcome to the home page!</p>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-            <div>{elements}</div>
-        </>
+        <main>
+            <Image src={logo} alt={'Aether logo'} className={styles.logo} height={64} />
+
+            <section>
+                <Link href='/login'>Log In</Link>
+            </section>
+
+            <section>{elements}</section>
+        </main>
     )
 }
 

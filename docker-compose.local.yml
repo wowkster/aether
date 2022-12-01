@@ -1,0 +1,24 @@
+version: '3.9'
+services:
+    mongo:
+        image: mongo:latest
+        container_name: aether_mongo
+        restart: unless-stopped
+        ports:
+            - '27017:27017'
+        volumes:
+            - ./.data/mongo_data:/data
+    minio:
+        image: minio/minio:latest
+        container_name: aether_minio
+        restart: unless-stopped
+        ports:
+            - '9000:443'
+            - '9001:9001'
+        volumes:
+            - ./.data/minio/data:/data
+            - ./.data/minio:/root/.minio
+        environment:
+            MINIO_ACCESS_KEY: admin
+            MINIO_SECRET_KEY: password
+        command: server --address ":443" /data --console-address ":9001"

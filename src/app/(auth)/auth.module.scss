@@ -1,0 +1,51 @@
+@import '../../styles/theme';
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+
+    @media (max-width: 768px) {
+        font-size: clamp(0.85rem, 2vw, 1rem);
+    }
+}
+
+.rule {
+    width: 100%;
+    height: 1px;
+    border: none;
+    background-color: $theme-background-tertiary;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .title {
+        text-align: center;
+        margin: 0;
+    }
+}
+
+.or {
+    margin: 0;
+    color: $theme-text-secondary;
+}
+
+.auth_links {
+    font-size: 0.9em;
+
+    span {
+        user-select: none;
+    }
+
+    a {
+        color: $theme-blue;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}

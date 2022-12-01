@@ -10,7 +10,7 @@ $footer-height: 4rem;
 }
 
 .main {
-    padding-bottom: $footer-height; /* Footer height */
+    padding-bottom: $footer-height + 1rem; /* Footer height */
 
     min-height: 100vh;
     display: flex;
@@ -20,14 +20,26 @@ $footer-height: 4rem;
 
     padding-top: 2rem;
 
+    .logo {
+        @media (max-width: 768px) {
+            width: auto;
+            height: clamp(36px, 10vw, 64px);
+        }
+    }
+
     .wrapper {
         background-color: $theme-background-primary;
 
         width: 32rem;
         border-radius: 0.75rem;
         padding: 2rem;
-
+        
         box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.05);
+        
+        @media (max-width: 768px) {
+            width: clamp(16rem, 90%, 32rem);
+            padding:  clamp(1rem, 1vw, 2rem);
+        }
     }
 
     .links {
