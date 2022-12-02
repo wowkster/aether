@@ -7,6 +7,9 @@ const nextConfig = {
         config.experiments = { ...config.experiments, topLevelAwait: true, layers: true }
         return config
     },
+    images: {
+        domains: ['aether.localhost'],
+    },
 }
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({

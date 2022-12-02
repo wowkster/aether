@@ -84,5 +84,33 @@
                 border-color: darken($theme-blue, $hover-darkness);
             }
         }
+        &__danger {
+            background-color: #fff;
+            border-color: $theme-red;
+            color: $theme-red;
+
+            &:hover {
+                color: darken($theme-red, $hover-darkness);
+                border-color: darken($theme-red, $hover-darkness);
+            }
+        }
+    }
+}
+
+.profile {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+
+    &__avatar {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    &__name {
+        font-weight: 700;
     }
 }
