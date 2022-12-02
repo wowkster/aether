@@ -49,12 +49,14 @@ export default async function NavBar() {
                             </div>
                             <Link
                                 href={'/dashboard'}
-                                className={combine(styles.nav__button, styles.nav__button__primary)}>
+                                className={combine(styles.nav__button, styles.nav__button__primary)}
+                            >
                                 Dashboard
                             </Link>
                             <Link
                                 href={'/api/auth/logout'}
-                                className={combine(styles.nav__button, styles.nav__button__danger)}>
+                                className={combine(styles.nav__button, styles.nav__button__danger)}
+                            >
                                 Log Out
                             </Link>
                         </>
@@ -65,7 +67,8 @@ export default async function NavBar() {
                             </Link>
                             <Link
                                 href={'/signup'}
-                                className={combine(styles.nav__button, styles.nav__button__secondary)}>
+                                className={combine(styles.nav__button, styles.nav__button__secondary)}
+                            >
                                 Sign Up
                             </Link>
                         </>

@@ -21,7 +21,7 @@ const handleLogin = async (email: string, password: string, rememberMe: boolean)
         const res = await axios.post('/api/auth/login', {
             email,
             password,
-            rememberMe
+            rememberMe,
         })
 
         return res.data
@@ -78,7 +78,8 @@ const LoginForm: FC = () => {
             disabled={!formIsValid || isFetching || data}
             isFetching={isFetching}
             error={isError && translateError(error as LoginError)}
-            onSubmit={() => refetch()}>
+            onSubmit={() => refetch()}
+        >
             <input
                 ref={emailRef}
                 type='email'

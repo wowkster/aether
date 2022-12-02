@@ -20,7 +20,8 @@ export const AuthForm: FC<{
             onSubmit={evt => {
                 evt.preventDefault()
                 onSubmit()
-            }}>
+            }}
+        >
             {error && <ErrorMessage error={error} />}
             {children}
             <button type='submit' disabled={disabled} onClick={_ => onSubmit()}>

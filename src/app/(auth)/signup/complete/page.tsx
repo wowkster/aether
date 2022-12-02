@@ -9,7 +9,7 @@ import SignupCompletionForm from './SignupCompletionForm'
 const validateSessionAndLoginState = async () => {
     const nextCookies = cookies()
     const session = nextCookies.get('session')
-    
+
     // TODO make into an api route to auto dedupe requests to database (save money)
     const user = await Database.getUserFromSession(session?.value)
 

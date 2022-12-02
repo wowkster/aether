@@ -33,12 +33,12 @@ $footer-height: 4rem;
         width: 32rem;
         border-radius: 0.75rem;
         padding: 2rem;
-        
+
         box-shadow: 0 0 0.5rem rgb(0 0 0 / 0.05);
-        
+
         @media (max-width: 768px) {
             width: clamp(16rem, 90%, 32rem);
-            padding:  clamp(1rem, 1vw, 2rem);
+            padding: clamp(1rem, 1vw, 2rem);
         }
     }
 

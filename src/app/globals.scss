@@ -22,11 +22,13 @@ a {
     text-decoration: none;
 }
 
-input, select, form, button {
+input,
+select,
+form,
+button {
     font: inherit;
 }
 
-
 [data-nextjs-scroll-focus-boundary] {
     display: contents;
-  }
+}

@@ -1,4 +1,4 @@
-import { NanoID } from "../util/nanoid";
+import { NanoID } from '../util/nanoid'
 
 export interface Session {
     id: NanoID

@@ -339,7 +339,6 @@ export default class Database {
      * @param sessionId The session id
      */
     static async updateSessionDate(sessionId: NanoID) {
-
         const session = await getDocument<Session>('sessions', { id: sessionId })
 
         // If the session is not close to expiring, don't update it

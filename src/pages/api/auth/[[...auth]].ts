@@ -142,7 +142,7 @@ class AuthHandler {
         // Set the session cookie
         setCookie(res, 'session', session.id, {
             ...SESSION_COOKIE_OPTIONS,
-            maxAge: 1000 * 60 * 60 * 24 * (Math.floor(Math.random() * + 21) + 7), // Random value between 7-30 days
+            maxAge: 1000 * 60 * 60 * 24 * (Math.floor(Math.random() * +21) + 7), // Random value between 7-30 days
         })
 
         return user
