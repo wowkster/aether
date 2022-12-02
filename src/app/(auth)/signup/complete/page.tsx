@@ -6,7 +6,7 @@ import { cookies } from 'next/headers'
 import Database from '../../../../util/database/mongo'
 import SignupCompletionForm from './SignupCompletionForm'
 
-export const validateSessionAndLoginState = async () => {
+const validateSessionAndLoginState = async () => {
     const nextCookies = cookies()
     const session = nextCookies.get('session')
     

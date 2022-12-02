@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation'
 import { FC, useEffect, useRef, useState } from 'react'
 import { AuthForm } from '../AuthForm'
 
+import styles from '../AuthForm.module.scss'
+
 enum LoginError {
     INVALID_CREDENTIALS = 'INVALID_CREDENTIALS',
     BAD_EMAIL = 'BAD_EMAIL',
@@ -14,11 +16,12 @@ enum LoginError {
     OTHER = 'OTHER',
 }
 
-const handleLogin = async (email: string, password: string) => {
+const handleLogin = async (email: string, password: string, rememberMe: boolean) => {
     try {
         const res = await axios.post('/api/auth/login', {
             email,
             password,
+            rememberMe
         })
 
         return res.data
@@ -41,15 +44,16 @@ const handleLogin = async (email: string, password: string) => {
 const LoginForm: FC = () => {
     const router = useRouter()
 
-    const [emailContent, setEmailContent] = useState('')
-    const [passwordContent, setPasswordContent] = useState('')
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [rememberMe, setRememberMe] = useState(false)
 
-    const email = useRef<HTMLInputElement>(null)
-    const password = useRef<HTMLInputElement>(null)
+    const emailRef = useRef<HTMLInputElement>(null)
+    const passwordRef = useRef<HTMLInputElement>(null)
 
     const { isFetching, isError, data, error, refetch } = useQuery({
         queryKey: ['login'],
-        queryFn: () => handleLogin(emailContent, passwordContent),
+        queryFn: () => handleLogin(email, password, rememberMe),
         enabled: false,
         retry: false,
     })
@@ -64,10 +68,10 @@ const LoginForm: FC = () => {
         // Don't clear if there is no error
         if (!error) return
 
-        setPasswordContent('')
+        setPassword('')
     }, [error])
 
-    const formIsValid = email.current?.validity.valid && password.current?.validity.valid
+    const formIsValid = emailRef.current?.validity.valid && passwordRef.current?.validity.valid
 
     return (
         <AuthForm
@@ -76,26 +80,36 @@ const LoginForm: FC = () => {
             error={isError && translateError(error as LoginError)}
             onSubmit={() => refetch()}>
             <input
-                ref={email}
+                ref={emailRef}
                 type='email'
                 placeholder='Enter email'
-                value={emailContent}
-                onChange={evt => setEmailContent(evt.target.value)}
+                value={email}
+                onChange={evt => setEmail(evt.target.value)}
                 required
-                pattern={`^[\\p{L}!#-'*+\\-/\\d=?^-~]+(.[\\p{L}!#-'*+\\-/\\d=?^-~])*@[^@\\s]{2,}$`}
+                pattern={`^[\\p{L}!#-'*+\\-/\\d=?^-~]+(.[\\p{L}!#-'*+-/\\d=?^-~])*@[^@\\s]{2,}$`}
                 autoComplete='email'
             />
             <input
-                ref={password}
+                ref={passwordRef}
                 type='password'
                 placeholder='Enter password'
-                value={passwordContent}
-                onChange={evt => setPasswordContent(evt.target.value)}
+                value={password}
+                onChange={evt => setPassword(evt.target.value)}
                 required
                 minLength={8}
                 maxLength={64}
                 autoComplete='current-password'
             />
+            <div className={styles.remember_me}>
+                <input
+                    type='checkbox'
+                    name='remember-me'
+                    id='remember-me'
+                    checked={rememberMe}
+                    onChange={evt => setRememberMe(evt.target.checked)}
+                />
+                <label htmlFor='remember-me'>Remember Me</label>
+            </div>
         </AuthForm>
     )
 }

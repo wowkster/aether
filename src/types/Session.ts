@@ -4,5 +4,5 @@ export interface Session {
     id: NanoID
     userId: NanoID
     createdAt: Date
-    updatedAt: Date
+    expireAfter: Date
 }

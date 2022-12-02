@@ -1,4 +1,4 @@
-import { IsAscii, IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator'
+import { IsAscii, IsBoolean, IsEmail, IsNotEmpty, MaxLength, MinLength } from 'class-validator'
 import type { NextApiResponse } from 'next'
 import {
     Body,
@@ -64,6 +64,10 @@ export class LoginRequest {
     @MaxLength(64)
     @IsAscii()
     password!: string
+
+    @IsNotEmpty()
+    @IsBoolean()
+    rememberMe!: boolean
 }
 
 export class SignupRequest {
@@ -136,7 +140,10 @@ class AuthHandler {
         const session = await Database.createSessionFromUser(user)
 
         // Set the session cookie
-        setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
+        setCookie(res, 'session', session.id, {
+            ...SESSION_COOKIE_OPTIONS,
+            maxAge: 1000 * 60 * 60 * 24 * (Math.floor(Math.random() * + 21) + 7), // Random value between 7-30 days
+        })
 
         return user
     }
@@ -206,7 +213,7 @@ class AuthHandler {
         // If the user is found, we need to revalidate the session
         const updatedSession = await Database.updateSessionDate(session)
 
-        return { valid: true, expires: new Date(updatedSession.updatedAt.getTime() + 3600 * 1000) }
+        return { valid: true, expires: new Date(updatedSession.expireAfter.getTime() + 3600 * 1000) }
     }
 
     /**

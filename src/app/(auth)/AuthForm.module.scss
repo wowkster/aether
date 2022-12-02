@@ -35,6 +35,26 @@
         }
     }
 
+    .remember_me {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        input[type='checkbox'] {
+            width: 1.125rem;
+            height: 1.125rem;
+
+            border: 2px solid $theme-background-tertiary;
+        }
+
+        label {
+            cursor: pointer;
+            user-select: none;
+
+            color: #757575;
+        }
+    }
+
     button[type='submit'] {
         font-family: var(--font-metropolis);
         font-weight: 600;

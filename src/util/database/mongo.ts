@@ -317,7 +317,7 @@ export default class Database {
 
         return await insertOne<Session>(
             'sessions',
-            { id: await nanoid(), userId: id, createdAt: new Date(), updatedAt: new Date() },
+            { id: await nanoid(), userId: id, createdAt: new Date(), expireAfter: new Date() },
             true
         )
     }
@@ -339,7 +339,13 @@ export default class Database {
      * @param sessionId The session id
      */
     static async updateSessionDate(sessionId: NanoID) {
-        return await updateDocument<Session>('sessions', { id: sessionId }, { $set: { updatedAt: new Date() } })
+
+        const session = await getDocument<Session>('sessions', { id: sessionId })
+
+        // If the session is not close to expiring, don't update it
+        if (session?.expireAfter > new Date()) return session
+
+        return await updateDocument<Session>('sessions', { id: sessionId }, { $set: { expireAfter: new Date() } })
     }
 
     /**
