@@ -9,7 +9,9 @@ export default async function LoginLayout({ children }) {
     return (
         <div className={styles.page_container}>
             <main className={styles.main}>
-                <Image src={logo} alt={'Aether logo'} className={styles.logo} height={64} />
+                <Link href='/'>
+                    <Image src={logo} alt={'Aether logo'} className={styles.logo} height={64} />
+                </Link>
                 <div className={styles.wrapper}>{children}</div>
                 <div className={styles.links}>
                     <Link href={'/privacy'}>Privacy Policy</Link>

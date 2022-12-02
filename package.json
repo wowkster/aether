@@ -15,6 +15,7 @@
         "@aws-sdk/signature-v4-crt": "^3.215.0",
         "@dicebear/avatars": "^4.10.5",
         "@dicebear/avatars-identicon-sprites": "^4.10.5",
+        "@next/bundle-analyzer": "^13.0.6",
         "@octokit/oauth-app": "^4.1.0",
         "@tanstack/react-query": "^4.18.0",
         "aws-crt": "^1.14.8",

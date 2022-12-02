@@ -1,0 +1,40 @@
+$navbar-height: 68px;
+$footer-height: 115px;
+
+.page_container {
+    position: relative;
+    min-height: calc(100vh - $navbar-height);
+}
+
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
+
+    .rule {
+        height: 1px;
+        width: 100%;
+        background-color: #e0e0e0;
+        border: none;
+    }
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 2rem;
+
+    margin: $navbar-height auto 0 auto;
+    padding: 2rem 2rem $footer-height 2rem;
+
+    max-width: 96rem;
+}
