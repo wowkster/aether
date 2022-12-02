@@ -1,4 +1,4 @@
 ideas:
-    main system where people login with oauth or email, everyeone has their own account, and get invited to the org or get a join code
-
-    separate system where scouters can enter an event code and scout anonymously for different matches
+    ☐ main system where people login with oauth or email, everyeone has their own account, and get invited to the org or get a join code
+    ☐ separate system where scouters can enter an event code and scout anonymously for different matches
+    ☐ https://www.npmjs.com/package/password-validator
