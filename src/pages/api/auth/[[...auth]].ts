@@ -20,9 +20,9 @@ import { OAuth2Client as GoogleOauth2 } from 'google-auth-library'
 import { OAuthApp as GitHubOauth2 } from '@octokit/oauth-app'
 
 import { CookieSerializeOptions } from 'cookie'
-import { OAuthType, User } from '../../types/User'
-import { setCookie } from '../../util/cookie'
-import Database from '../../util/database/mongo'
+import { OAuthType, User } from '../../../types/User'
+import { setCookie } from '../../../util/cookie'
+import Database from '../../../util/database/mongo'
 import { OctokitInstance } from '@octokit/oauth-app/dist-types/types'
 
 if (!process.env.DISCORD_OAUTH_CLIENT_ID) throw new Error('DISCORD_OAUTH_CLIENT_ID not set in environment')
@@ -93,6 +93,18 @@ export class SignupRequest {
     password!: string
 }
 
+export class SignupCompletionRequest {
+    @IsNotEmpty()
+    @MaxLength(64)
+    @IsAscii()
+    firstName!: string
+
+    @IsNotEmpty()
+    @MaxLength(64)
+    @IsAscii()
+    lastName!: string
+}
+
 export const Cookies = createParamDecorator<Partial<{ [key: string]: string }>>(req => req.cookies)
 
 const SESSION_COOKIE_OPTIONS: CookieSerializeOptions = {
@@ -151,6 +163,29 @@ class AuthHandler {
 
         // Set the session cookie
         setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
+
+        return user
+    }
+
+    /**
+     * Fills in the first & last names if they were not provided by the OAuth provider during signup
+     *
+     * Called by the signup form
+     */
+    @Post('/signup/complete')
+    public async signUpCompletion(
+        @Body(ValidationPipe) { firstName, lastName }: SignupCompletionRequest,
+        @Cookies() { session }
+    ) {
+        console.log('Sign up completion request:', { firstName, lastName })
+
+        let user = await Database.getUserFromSession(session)
+
+        // Don't allow signup completion if the user already has the fields filled in
+        if (user?.firstName && user?.lastName) throw new HttpException(409, 'User already has first and last name', ['FIELDS_ALREADY_FILLED'])
+
+        // Update the user
+        user = await Database.updateUserCompleteSignup(user.id, { firstName, lastName })
 
         return user
     }

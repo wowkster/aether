@@ -3,8 +3,8 @@ import { NanoID } from '../util/nanoid'
 export interface User {
     id: NanoID
     username: string
-    firstName: string
-    lastName: string
+    firstName: string | null
+    lastName: string | null
     email: string
     oauthType: OAuthType | null // If null, user is not an OAuth user
     verified: boolean

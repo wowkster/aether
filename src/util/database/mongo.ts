@@ -14,7 +14,7 @@ import { FindOptions, MongoClient } from 'mongodb'
 import { createAvatar } from '@dicebear/avatars'
 import * as style from '@dicebear/avatars-identicon-sprites'
 
-import { SignupRequest } from '../../pages/api/[...auth]'
+import { SignupRequest } from '../../pages/api/auth/[[...auth]]'
 import nanoid, { NanoID } from '../nanoid'
 
 import { Organization } from '../../types/Organization'
@@ -189,16 +189,14 @@ export default class Database {
             `https://cdn.discordapp.com/avatars/${discordUser.id}/${discordUser.avatar}.webp?size=1024`
         )
 
-        // TODO make a page to collect first and last names (/signup/complete)
-
         // Insert the user into the database
         const user = await insertOne<DbUser>(
             'users',
             {
                 id,
                 username: discordUser.username,
-                firstName: '',
-                lastName: '',
+                firstName: null,
+                lastName: null,
                 email: discordUser.email,
                 avatar,
                 verified: true,
@@ -230,8 +228,6 @@ export default class Database {
 
         const avatar = await this.createAvatarForUserFromUrl(id, avatarURL)
 
-        // TODO make a page to collect first and last names (/signup/complete)
-
         // Insert the user into the database
         const user = await insertOne<DbUser>(
             'users',
@@ -255,13 +251,19 @@ export default class Database {
         return this.cleanUser(user)
     }
 
-    static async createUserFromGitHubOAuth( {username, avatarURL, email}: {username: string, avatarURL: string, email: string}) {
+    static async createUserFromGitHubOAuth({
+        username,
+        avatarURL,
+        email,
+    }: {
+        username: string
+        avatarURL: string
+        email: string
+    }) {
         // Create the user's ID
         const id = await nanoid()
 
         const avatar = await this.createAvatarForUserFromUrl(id, avatarURL)
-
-        // TODO make a page to collect first and last names (/signup/complete)
 
         // Insert the user into the database
         const user = await insertOne<DbUser>(
@@ -269,8 +271,8 @@ export default class Database {
             {
                 id,
                 username,
-                firstName: '',
-                lastName: '',
+                firstName: null,
+                lastName: null,
                 email,
                 avatar,
                 verified: true,
@@ -283,6 +285,23 @@ export default class Database {
         )
 
         // Return the user object without the sensitive information
+        return this.cleanUser(user)
+    }
+
+    static async updateUserCompleteSignup(id: NanoID, name: { firstName: string; lastName: string }): Promise<User> {
+        // Update the user's names
+        const user = await updateDocument<DbUser>(
+            'users',
+            { id },
+            {
+                $set: {
+                    firstName: name.firstName,
+                    lastName: name.lastName,
+                },
+            }
+        )
+
+        // Return the updated user object without the sensitive information
         return this.cleanUser(user)
     }
 
