@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import logo from '../../../public/logo-beta.svg'
+import logo from '../../../public/img/logo-beta.svg'
 
 import styles from './auth.layout.module.scss'
 

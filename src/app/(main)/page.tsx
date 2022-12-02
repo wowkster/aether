@@ -2,7 +2,7 @@ import Image from 'next/image'
 
 import styles from './page.module.scss'
 
-import logo from '../../../public/logo-beta.svg'
+import logo from '../../../public/img/logo-beta.svg'
 import Link from 'next/link'
 
 const getData = (): Promise<object> => new Promise(res => setTimeout(() => res({ your: 'mom' }), 1000))
