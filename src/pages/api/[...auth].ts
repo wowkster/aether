@@ -17,11 +17,13 @@ import {
 
 import DiscordOauth2 from 'discord-oauth2'
 import { OAuth2Client as GoogleOauth2 } from 'google-auth-library'
+import { OAuthApp as GitHubOauth2 } from '@octokit/oauth-app'
 
 import { CookieSerializeOptions } from 'cookie'
-import { OAuthType, User } from '../../../types/User'
-import { setCookie } from '../../../util/cookie'
-import Database from '../../../util/database/mongo'
+import { OAuthType, User } from '../../types/User'
+import { setCookie } from '../../util/cookie'
+import Database from '../../util/database/mongo'
+import { OctokitInstance } from '@octokit/oauth-app/dist-types/types'
 
 if (!process.env.DISCORD_OAUTH_CLIENT_ID) throw new Error('DISCORD_OAUTH_CLIENT_ID not set in environment')
 if (!process.env.DISCORD_OAUTH_CLIENT_SECRET) throw new Error('DISCORD_OAUTH_CLIENT_SECRET not set in environment')
@@ -42,6 +44,15 @@ const googleOAuth = new GoogleOauth2(
     process.env.GOOGLE_OAUTH_CLIENT_SECRET,
     process.env.GOOGLE_OAUTH_REDIRECT_URI
 )
+
+if (!process.env.GITHUB_OAUTH_CLIENT_ID) throw new Error('GITHUB_OAUTH_CLIENT_ID not set in environment')
+if (!process.env.GITHUB_OAUTH_CLIENT_SECRET) throw new Error('GITHUB_OAUTH_CLIENT_SECRET not set in environment')
+if (!process.env.GITHUB_OAUTH_REDIRECT_URI) throw new Error('GITHUB_OAUTH_REDIRECT_URI not set in environment')
+
+const githubOAuth = new GitHubOauth2({
+    clientId: process.env.GITHUB_OAUTH_CLIENT_ID,
+    clientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET,
+})
 
 export class LoginRequest {
     @IsNotEmpty()
@@ -102,7 +113,7 @@ class AuthHandler {
         // Get the user from the database
         const user = await Database.getDbUserFromEmail(email)
 
-        if (user && user.oauthType) throw new UnauthorizedException('Account is linked to an external provider')
+        if (user && !user.password) throw new UnauthorizedException('Account is linked to an external provider')
 
         // Return the same response for invalid email and invalid password to prevent email enumeration
         if (!user || !(await Database.validatePassword(password, user.password)))
@@ -191,10 +202,14 @@ class AuthHandler {
             ],
         })
 
+        const { url: github } = githubOAuth.getWebFlowAuthorizationUrl({
+            scopes: ['user:email', 'read:user'],
+        })
+
         return {
             discord,
             google,
-            github: 'https://github.com',
+            github,
         }
     }
 
@@ -258,9 +273,6 @@ class AuthHandler {
         }
     }
 
-    /**
-     * TODO https://www.npmjs.com/package/google-auth-library
-     */
     @Get('/callback/google')
     public async googleCallback(@Query('code') code: string, @Res() response: NextApiResponse<User>) {
         if (!code) throw new HttpException(400, 'No code provided', ['NO_CODE_PROVIDED'])
@@ -270,18 +282,16 @@ class AuthHandler {
             const { tokens } = await googleOAuth.getToken(code)
             googleOAuth.setCredentials(tokens)
         } catch {
-            throw new HttpException(401, 'Failed to get access token from Discord', ['INVALID_OAUTH_CODE'])
+            throw new HttpException(401, 'Failed to get access token from Google', ['INVALID_OAUTH_CODE'])
         }
 
         // Make a simple request to the People API using our pre-authenticated client
         const url = 'https://people.googleapis.com/v1/people/me?personFields=names,photos'
         const { data } = await googleOAuth.request({ url })
-        console.log('Me:', data)
 
         // After acquiring an access_token, you may want to check on the audience, expiration,
         // or original scopes requested.  You can do that with the `getTokenInfo` method.
         const { email } = await googleOAuth.getTokenInfo(googleOAuth.credentials.access_token)
-        console.log('Email:', email)
 
         // Get the user from the database
         let user: User = await Database.getUserFromEmail(email)
@@ -304,11 +314,83 @@ class AuthHandler {
         response.end()
     }
 
-    /**
-     * TODO https://medium.com/@jackrobertscott/easy-github-auth-with-node-js-502d3d8f8e62
-     */
+    // TODO make an enum for errors and include it in the query string of a login page redirect
+
     @Get('/callback/github')
-    public async githubCallback(@Query('code') code: string, @Res() res: NextApiResponse<User>) {}
+    public async githubCallback(@Query('code') code: string, @Res() res: NextApiResponse<User>) {
+        if (!code) throw new HttpException(400, 'No code provided', ['NO_CODE_PROVIDED'])
+
+        let octokit: OctokitInstance
+
+        try {
+            // Create an octokit instance from the token
+            octokit = await githubOAuth.getUserOctokit({ code })
+        } catch {
+            throw new HttpException(401, 'Failed to get access token from GitHub', ['INVALID_OAUTH_CODE'])
+        }
+
+        // Get the user object from GitHub
+        const userSupplier = () => octokit.request('GET /user')
+
+        let githubUser: Awaited<ReturnType<typeof userSupplier>>['data']
+
+        try {
+            const { data } = await userSupplier()
+            githubUser = data
+        } catch {
+            throw new HttpException(401, 'Failed to get profile data from GitHub', ['INVALID_DATA_FROM_PROVIDER'])
+        }
+
+        // Get the user's emails from GitHub
+        const emailSupplier = () => octokit.request('GET /user/emails')
+
+        let emails: Awaited<ReturnType<typeof emailSupplier>>['data']
+
+        try {
+            const { data } = await emailSupplier()
+            emails = data
+        } catch {
+            throw new HttpException(401, 'Failed to get emails from GitHub', ['INVALID_DATA_FROM_PROVIDER'])
+        }
+
+        // Get the user's primary email
+        const primaryEmail = emails.find(email => email.primary)?.email
+
+        // Get the user from the database
+        let user: User = await Database.getUserFromEmail(primaryEmail)
+
+        // If user did not use GitHub to sign up, throw an error
+        if (user && user.oauthType !== OAuthType.GITHUB)
+            throw new HttpException(401, 'User did not use GitHub to sign up', ['WRONG_OAUTH_PROVIDER'])
+
+        let userCreated = false
+
+        // Create the user if they don't exist
+        if (!user) {
+            user = await Database.createUserFromGitHubOAuth({
+                username: githubUser.login,
+                avatarURL: githubUser.avatar_url,
+                email: primaryEmail,
+            })
+            userCreated = true
+        }
+
+        // Create user session
+        const session = await Database.createSessionFromUser(user)
+
+        // Set the session cookie
+        setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
+
+        if (userCreated) {
+            // Redirect to the signup completion page
+            res.setHeader('Refresh', '0; url=' + '/signup/complete')
+            res.end()
+        } else {
+            // Redirect to dashboard
+            res.setHeader('Refresh', '0; url=' + '/dashboard')
+            res.end()
+        }
+    }
 }
 
 export default createHandler(AuthHandler)

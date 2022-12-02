@@ -1,34 +1,14 @@
-import { cookies } from 'next/headers'
 import Link from 'next/link'
-import { redirect } from 'next/navigation'
 
 import OAuthProviders from '../OAuthProviders'
 import LoginForm from './LoginForm'
 
 import styles from '../auth.module.scss'
-import Database from '../../../util/database/mongo'
-
-const checkSessionState = async (redirectPath: string | string[]) => {
-    const nextCookies = cookies()
-    const session = nextCookies.get('session')
-
-    const user = await Database.getUserFromSession(session?.value)
-
-    console.log('Session User (Login):', user)
-
-    // Get path from param or first instance of that param if array
-    const path = redirectPath ? (typeof redirectPath === 'string' ? redirectPath : redirectPath[0]) : '/dashboard'
-
-    // If there is a user session, redirect away from the sign up page
-    if (user) {
-        console.log('User session exists, redirecting from Log In to', path)
-        redirect(path)
-    }
-}
+import { validateSession } from '../session'
 
 const Login = async props => {
     // Request will be redirected if the user is already logged in
-    await checkSessionState(props.searchParams.redirect)
+    await validateSession(props.searchParams.redirect)
 
     return (
         <div className={styles.wrapper}>

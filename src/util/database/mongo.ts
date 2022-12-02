@@ -14,7 +14,7 @@ import { FindOptions, MongoClient } from 'mongodb'
 import { createAvatar } from '@dicebear/avatars'
 import * as style from '@dicebear/avatars-identicon-sprites'
 
-import { SignupRequest } from '../../pages/api/auth/[[...auth]]'
+import { SignupRequest } from '../../pages/api/[...auth]'
 import nanoid, { NanoID } from '../nanoid'
 
 import { Organization } from '../../types/Organization'
@@ -247,6 +247,37 @@ export default class Database {
                 updatedAt: new Date(),
                 password: null,
                 oauthType: OAuthType.GOOGLE,
+            },
+            true
+        )
+
+        // Return the user object without the sensitive information
+        return this.cleanUser(user)
+    }
+
+    static async createUserFromGitHubOAuth( {username, avatarURL, email}: {username: string, avatarURL: string, email: string}) {
+        // Create the user's ID
+        const id = await nanoid()
+
+        const avatar = await this.createAvatarForUserFromUrl(id, avatarURL)
+
+        // TODO make a page to collect first and last names (/signup/complete)
+
+        // Insert the user into the database
+        const user = await insertOne<DbUser>(
+            'users',
+            {
+                id,
+                username,
+                firstName: '',
+                lastName: '',
+                email,
+                avatar,
+                verified: true,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+                password: null,
+                oauthType: OAuthType.GITHUB,
             },
             true
         )

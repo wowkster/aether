@@ -15,13 +15,8 @@
         "@aws-sdk/signature-v4-crt": "^3.215.0",
         "@dicebear/avatars": "^4.10.5",
         "@dicebear/avatars-identicon-sprites": "^4.10.5",
-        "@next/font": "^13.0.5",
+        "@octokit/oauth-app": "^4.1.0",
         "@tanstack/react-query": "^4.18.0",
-        "@types/bcryptjs": "^2.4.2",
-        "@types/node": "18.11.9",
-        "@types/react": "18.0.25",
-        "@types/react-dom": "18.0.9",
-        "@wowkster/prettier-config": "^1.0.1",
         "aws-crt": "^1.14.8",
         "axios": "^1.2.0",
         "bcryptjs": "^2.4.3",
@@ -36,6 +31,7 @@
         "nanoid": "^4.0.0",
         "next": "13.0.6-canary.3",
         "next-api-decorators": "^2.0.0",
+        "octokit": "^2.0.10",
         "path-to-regexp": "^6.2.1",
         "react": "18.2.0",
         "react-dom": "18.2.0",
@@ -46,8 +42,13 @@
         "typescript": "4.9.3"
     },
     "devDependencies": {
+        "@types/bcryptjs": "^2.4.2",
         "@types/cookie": "^0.5.1",
+        "@types/node": "18.11.9",
+        "@types/react": "18.0.25",
+        "@types/react-dom": "18.0.9",
         "@types/sharp": "^0.31.0",
+        "@wowkster/prettier-config": "^1.0.1",
         "sass": "^1.56.1"
     },
     "prettier": "@wowkster/prettier-config"
