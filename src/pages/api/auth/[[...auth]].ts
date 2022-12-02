@@ -105,7 +105,8 @@ export class SignupCompletionRequest {
     lastName!: string
 }
 
-export const Cookies = createParamDecorator<Partial<{ [key: string]: string }>>(req => req.cookies)
+export type ReqCookies = Partial<{ [key: string]: string }>
+export const Cookies = createParamDecorator<ReqCookies>(req => req.cookies)
 
 const SESSION_COOKIE_OPTIONS: CookieSerializeOptions = {
     httpOnly: true,
@@ -175,14 +176,15 @@ class AuthHandler {
     @Post('/signup/complete')
     public async signUpCompletion(
         @Body(ValidationPipe) { firstName, lastName }: SignupCompletionRequest,
-        @Cookies() { session }
+        @Cookies() { session }: ReqCookies
     ) {
         console.log('Sign up completion request:', { firstName, lastName })
 
         let user = await Database.getUserFromSession(session)
 
         // Don't allow signup completion if the user already has the fields filled in
-        if (user?.firstName && user?.lastName) throw new HttpException(409, 'User already has first and last name', ['FIELDS_ALREADY_FILLED'])
+        if (user?.firstName && user?.lastName)
+            throw new HttpException(409, 'User already has first and last name', ['FIELDS_ALREADY_FILLED'])
 
         // Update the user
         user = await Database.updateUserCompleteSignup(user.id, { firstName, lastName })
@@ -190,10 +192,31 @@ class AuthHandler {
         return user
     }
 
+    /**
+     * Revalidate session periodically
+     */
+    @Post('/session/heartbeat')
+    public async revalidate(@Cookies() { session }: ReqCookies) {
+        // Get the user from the session
+        const user = await Database.getUserFromSession(session)
+
+        // If the user is not found, discard the request
+        if (!user) return { valid: false }
+
+        // If the user is found, we need to revalidate the session
+        const updatedSession = await Database.updateSessionDate(session)
+
+        return { valid: true, expires: new Date(updatedSession.updatedAt.getTime() + 3600 * 1000) }
+    }
+
+    /**
+     * Logs a user out
+     * Called by the logout button
+     */
     @Get('/logout')
     public async logout(
         @Header('Next-Router-Prefetch') prefetch: string,
-        @Cookies() cookies,
+        @Cookies() cookies: ReqCookies,
         @Res() res: NextApiResponse<User>
     ) {
         // Don't log users out when next prefetches the logout link

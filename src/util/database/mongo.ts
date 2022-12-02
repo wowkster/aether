@@ -339,7 +339,7 @@ export default class Database {
      * @param sessionId The session id
      */
     static async updateSessionDate(sessionId: NanoID) {
-        await updateDocument('sessions', { id: sessionId }, { $set: { updatedAt: new Date() } })
+        return await updateDocument<Session>('sessions', { id: sessionId }, { $set: { updatedAt: new Date() } })
     }
 
     /**
