@@ -38,3 +38,5 @@ next-env.d.ts
 .data
 .vscode
 .env
+
+analyze

@@ -25,3 +25,8 @@ a {
 input, select, form, button {
     font: inherit;
 }
+
+
+[data-nextjs-scroll-focus-boundary] {
+    display: contents;
+  }

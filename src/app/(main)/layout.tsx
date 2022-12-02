@@ -5,6 +5,7 @@ import styles from './main.layout.module.scss'
 export default async function Layout({ children }) {
     return (
         <div className={styles.page_container}>
+            {/* @ts-expect-error Server Component */}
             <NavBar />
             <main className={styles.main}>{children}</main>
             <footer className={styles.footer}>
