@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 
-import { FiArrowRight, FiArrowDown } from 'react-icons/fi'
+import { FiArrowRight } from 'react-icons/fi'
 
 import styles from './home.page.module.scss'
 
