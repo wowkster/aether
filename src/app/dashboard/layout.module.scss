@@ -1,0 +1,128 @@
+.container {
+    display: flex;
+    position: relative;
+    z-index: 1;
+}
+
+// Check box that controls the toggling
+.left_nav_input {
+    display: none;
+
+    // Make the left nav have a smooth translation when collapsing
+    & + .container .side_bar:first-child {
+        transition: translate 0.3s ease;
+    }
+
+    // Make the page content smoothly animate left
+    & + .container > .page_content {
+        transition: margin 0.3s ease;
+    }
+
+    // Translate the left sidebar out of view when collapsed
+    &:checked + .container > .side_bar:first-child {
+        translate: -20rem;
+    }
+
+    // Remove the left margin on the page content when the sidebar is collapsed, to fill up the empty space
+    &:checked + .container > .page_content {
+        margin-left: 0;
+    }
+
+    /* Conditionally show the open and close buttons */
+
+    &:not(:checked) + .container .collapse_open {
+        display: none;
+    }
+
+    &:checked + .container .collapse_close {
+        display: none;
+    }
+}
+
+.collapse {
+    position: absolute;
+    right: -2.125rem;
+    top: 0;
+
+    width: fit-content;
+    height: fit-content;
+    padding: 0.25rem;
+    z-index: -1;
+
+    border-radius: 0 0.5rem 0.5rem 0;
+
+    cursor: pointer;
+
+    color: var(--theme-text-tertiary);
+    background-color: var(--theme-background-primary);
+    // box-shadow: 0 0 1rem 0 rgb(0 0 0 / 10%);
+
+    transition: color 0.2s ease, background-color 0.2s ease;
+
+    &:hover {
+        color: var(--theme-text-secondary);
+    }
+}
+
+.side_bar {
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+
+    position: absolute;
+
+    height: 100vh;
+    width: 20rem;
+    padding: 0.5rem;
+
+    background-color: var(--theme-background-primary);
+    filter: drop-shadow(0 0 1rem rgb(0 0 0 / 5%));
+
+    &:last-child {
+        right: 0;
+    }
+}
+
+.logo_container {
+    margin: 1rem 1.75rem;
+
+    .logo {
+        width: 15.5rem;
+    }
+}
+
+.logo_dark {
+    display: none;
+}
+
+:global([data-theme='dark']) {
+    .logo {
+        display: none;
+    }
+    .logo_dark {
+        display: block;
+    }
+}
+
+.page_content {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    z-index: -10;
+
+    min-height: 100vh;
+    width: 100%;
+
+    padding: 1.5rem;
+    padding-top: 3rem;
+    margin: 0 20rem;
+
+    background-color: var(--theme-background-secondary);
+}
+
+.footer {
+    margin-top: auto;
+
+    display: flex;
+    justify-content: center;
+}
