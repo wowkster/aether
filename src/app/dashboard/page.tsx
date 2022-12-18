@@ -23,10 +23,7 @@ export default async function Dashboard() {
     return (
         <>
             <h1>Dashboard</h1>
-            <pre>{JSON.stringify(user, null, 4)}</pre>
-            <Link href='/api/auth/logout' prefetch={false}>
-                Log Out
-            </Link>
+            {/* <pre>{JSON.stringify(user, null, 4)}</pre> */}
         </>
     )
 }
