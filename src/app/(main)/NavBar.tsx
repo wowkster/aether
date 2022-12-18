@@ -3,6 +3,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import logo from '../../../public/img/logo-beta.svg'
+import logoDark from '../../../public/img/logo-beta-dark.svg'
 import { User } from '../../types/User'
 import Database from '../../util/database/mongo'
 import { combine } from '../../util/styles'
@@ -25,6 +26,7 @@ export default async function NavBar() {
                 <div className={styles.nav__side}>
                     <Link href='/'>
                         <Image src={logo} alt={'Aether logo'} className={styles.logo} height={36} />
+                        <Image src={logoDark} alt={'Aether logo'} className={combine(styles.logo, styles.logo_dark)} height={36} />
                     </Link>
                     <div className={styles.nav__links}>
                         <Link href={'#'}>Features</Link>

@@ -11,6 +11,19 @@
     z-index: 100000; // NavBar should always be on top of everything
 }
 
+.logo_dark {
+    display: none;
+}
+
+:global([data-theme='dark']) {
+    .logo {
+        display: none;
+    }
+    .logo_dark {
+        display: block;
+    }
+}
+
 .nav {
     display: flex;
     flex-direction: row;
