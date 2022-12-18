@@ -1,4 +1,4 @@
-@import '../styles/theme';
+@import 'theme';
 
 html,
 body {
@@ -6,8 +6,8 @@ body {
     margin: 0;
     // font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
 
-    background-color: $theme-background-secondary;
-    color: $theme-text-primary;
+    background-color: var(--theme-background-secondary);
+    color: var(--theme-text-primary);
 }
 
 * {

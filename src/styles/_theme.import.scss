@@ -1,1 +1,21 @@
-@forward 'theme' as theme-*;
+@import 'themes';
+
+@function hexToRGB($hex) {
+    @return red($hex) green($hex) blue($hex);
+}
+
+@mixin generate_colors($colors) {
+    // Colors, RGB Colors
+    @each $color, $value in $colors {
+        --theme-#{$color}: #{$value};
+        --theme-#{$color}-rgb: #{hexToRGB($value)};
+    }
+}
+
+:root {
+    @include generate_colors($theme-light);
+}
+
+[data-theme='dark'] {
+    @include generate_colors($theme-dark);
+}

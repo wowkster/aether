@@ -1,8 +1,8 @@
 @import 'theme';
 
 :export {
-    red: $theme-red;
-    blue: $theme-blue;
-    green: $theme-green;
-    blurple: $theme-blurple;
+    red: var(--theme-red);
+    blue: var(--theme-blue);
+    green: var(--theme-green);
+    blurple: var(--theme-blurple);
 }

@@ -1,5 +1,3 @@
-@import '../../styles/theme';
-
 $footer-height: 4rem;
 
 .page_container {
@@ -28,7 +26,7 @@ $footer-height: 4rem;
     }
 
     .wrapper {
-        background-color: $theme-background-primary;
+        background-color: var(--theme-background-primary);
 
         width: 32rem;
         border-radius: 0.75rem;
@@ -50,7 +48,7 @@ $footer-height: 4rem;
         }
 
         a {
-            color: $theme-blue;
+            color: var(--theme-blue);
 
             &:hover {
                 text-decoration: underline;
@@ -65,11 +63,11 @@ $footer-height: 4rem;
     width: 100%;
     height: $footer-height;
 
-    color: $theme-text-secondary;
+    color: var(--theme-text-secondary);
     text-align: center;
 
     .rule {
-        background-color: $theme-background-tertiary;
+        background-color: var(--theme-background-tertiary);
         height: 1px;
         border: none;
         margin: 0 4rem 1rem 4rem;

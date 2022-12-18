@@ -1,5 +1,3 @@
-@import '../../styles/theme';
-
 .button_group {
     display: flex;
     flex-direction: column;
@@ -15,7 +13,7 @@
     justify-content: center;
     gap: 1rem;
 
-    border: 2px solid $theme-background-tertiary;
+    border: 2px solid var(--theme-background-tertiary);
     border-radius: 0.5rem;
     padding: 0.625rem;
 
@@ -29,6 +27,6 @@
     }
 
     &:hover {
-        background-color: lighten($theme-background-secondary, 1.5%);
+        background-color: lighten(var(--theme-background-secondary), 1.5%);
     }
 }

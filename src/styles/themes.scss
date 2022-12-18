@@ -1,0 +1,33 @@
+$colors: (
+    red: #ff3737,
+    red-dark: #ff0e0e,
+    blue: #377dff,
+    blue-dark: #0e62ff,
+    green: #1bb43c,
+    blurple: #5865f2,
+);
+
+$light: (
+    background-primary: #ffffff,
+    background-secondary: #f5f6fa,
+    background-tertiary: #ddd,
+
+    text-primary: #333333,
+    text-secondary: #8f8f8f,
+    text-tertiary: #c0c0c0,
+);
+
+$theme-light: map-merge($colors, $light);
+
+$dark: (
+    background-primary: #0a0b0e,
+    background-secondary: #06070a,
+    background-tertiary: #333333,
+    background-quaternary: #151515,
+
+    text-primary: #ffffff,
+    text-secondary: #c0c0c0,
+    text-tertiary: #8f8f8f,
+);
+
+$theme-dark: map-merge($colors, $dark);
