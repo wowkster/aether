@@ -1,12 +1,14 @@
+const path = require('path')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
         appDir: true,
     },
-    webpack: config => {
-        config.experiments = { ...config.experiments, topLevelAwait: true, layers: true }
-        return config
+    sassOptions: {
+        includePaths: [path.join(__dirname, 'src', 'styles')],
     },
+    swcMinify: false,
     images: {
         domains: ['aether.localhost'],
     },
