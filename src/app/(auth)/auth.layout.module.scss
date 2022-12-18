@@ -7,6 +7,19 @@ $footer-height: 4rem;
     overflow-y: hidden;
 }
 
+.logo_dark {
+    display: none;
+}
+
+:global([data-theme='dark']) {
+    .logo {
+        display: none;
+    }
+    .logo_dark {
+        display: block;
+    }
+}
+
 .main {
     padding-bottom: $footer-height + 1rem; /* Footer height */
 

@@ -2,8 +2,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import logo from '../../../public/img/logo-beta.svg'
+import logoDark from '../../../public/img/logo-beta-dark.svg'
 
 import styles from './auth.layout.module.scss'
+import { combine } from '../../util/styles'
 
 export default async function LoginLayout({ children }) {
     return (
@@ -11,6 +13,7 @@ export default async function LoginLayout({ children }) {
             <main className={styles.main}>
                 <Link href='/'>
                     <Image src={logo} alt={'Aether logo'} className={styles.logo} height={64} />
+                    <Image src={logoDark} alt={'Aether logo'} className={combine(styles.logo, styles.logo_dark)} height={64} />
                 </Link>
                 <div className={styles.wrapper}>{children}</div>
                 <div className={styles.links}>
