@@ -20,6 +20,15 @@ $footer-height: 4rem;
     }
 }
 
+:global([data-theme='teal']) {
+    .logo {
+        display: none;
+    }
+    .logo_dark {
+        display: block;
+    }
+}
+
 .main {
     padding-bottom: $footer-height + 1rem; /* Footer height */
 

@@ -19,3 +19,8 @@
 [data-theme='dark'] {
     @include generate_colors($theme-dark);
 }
+
+[data-theme='teal'] {
+    @include generate_colors($theme-teal);
+}
+

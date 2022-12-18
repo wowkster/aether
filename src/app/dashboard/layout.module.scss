@@ -104,6 +104,15 @@
     }
 }
 
+:global([data-theme='teal']) {
+    .logo {
+        display: none;
+    }
+    .logo_dark {
+        display: block;
+    }
+}
+
 .page_content {
     display: flex;
     flex-direction: column;

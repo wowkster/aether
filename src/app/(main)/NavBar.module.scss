@@ -24,6 +24,15 @@
     }
 }
 
+:global([data-theme='teal']) {
+    .logo {
+        display: none;
+    }
+    .logo_dark {
+        display: block;
+    }
+}
+
 .nav {
     display: flex;
     flex-direction: row;

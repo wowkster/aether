@@ -35,3 +35,17 @@ $dark: (
 );
 
 $theme-dark: map-merge($colors, $dark);
+
+$teal: (
+    background-primary: #0f908e,
+    background-secondary: #0d7e7c,
+    background-secondary-light: #109795,
+    background-tertiary: #13b5b3,
+    background-quaternary: #11a3a0,
+
+    text-primary: #ffffff,
+    text-secondary: #9defee,
+    text-tertiary: #59d3d1,
+);
+
+$theme-teal: map-merge($colors, $teal);
