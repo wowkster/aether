@@ -1,8 +1,8 @@
-@import 'theme';
+@import 'themes';
 
 :export {
-    red: var(--theme-red);
-    blue: var(--theme-blue);
-    green: var(--theme-green);
-    blurple: var(--theme-blurple);
+    red: map-get($colors, 'red');
+    blue: map-get($colors, 'blue');
+    green: map-get($colors, 'green');
+    blurple: map-get($colors, 'blurple');
 }

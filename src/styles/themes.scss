@@ -4,13 +4,16 @@ $colors: (
     blue: #377dff,
     blue-dark: #0e62ff,
     green: #1bb43c,
+    green-dark: #1aab39,
     blurple: #5865f2,
 );
 
 $light: (
     background-primary: #ffffff,
     background-secondary: #f5f6fa,
+    background-secondary-light: #fafbfd,
     background-tertiary: #ddd,
+    background-quaternary: #c4c4c4,
 
     text-primary: #333333,
     text-secondary: #8f8f8f,
@@ -22,6 +25,7 @@ $theme-light: map-merge($colors, $light);
 $dark: (
     background-primary: #0a0b0e,
     background-secondary: #06070a,
+    background-secondary-light: #06070a,
     background-tertiary: #333333,
     background-quaternary: #151515,
 

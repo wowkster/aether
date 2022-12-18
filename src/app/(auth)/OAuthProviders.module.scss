@@ -27,6 +27,6 @@
     }
 
     &:hover {
-        background-color: lighten(var(--theme-background-secondary), 1.5%);
+        background-color: var(--theme-background-secondary-light);
     }
 }
