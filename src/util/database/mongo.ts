@@ -17,13 +17,12 @@ import * as style from '@dicebear/avatars-identicon-sprites'
 import { SignupRequest } from '../../pages/api/auth/[[...auth]]'
 import nanoid, { NanoID } from '../nanoid'
 
-import { Organization } from '../../types/Organization'
+import { Organization, Role } from '../../types/Organization'
 import { Session } from '../../types/Session'
 import { DbUser, OAuthType, User } from '../../types/User'
 import { createHash } from 'crypto'
 import sharp from 'sharp'
 import axios from 'axios'
-import { URL } from 'url'
 
 /* INIT MONGODB CLIENT */
 export const client = new MongoClient(process.env.MONGO_URL ?? 'mongodb://localhost:27017', {
@@ -90,7 +89,7 @@ export default class Database {
      * Create a unique custom avatar for a user using dicebear
      * @param id The user's id
      */
-    static async createAvatarForUser(id: NanoID) {
+    static async createAvatarForId(id: NanoID) {
         // Create the avatar using dicebear
         const avatarDataURI = createAvatar(style, {
             seed: id,
@@ -153,7 +152,7 @@ export default class Database {
         // Create the user's ID
         const id = await nanoid()
 
-        const avatar = await this.createAvatarForUser(id)
+        const avatar = await this.createAvatarForId(id)
 
         // Hash the user's password
         const hash = await bcrypt.hash(password, 10)
@@ -352,6 +351,52 @@ export default class Database {
      */
     static async destroySession(sessionId: NanoID) {
         return await deleteOne('sessions', { id: sessionId })
+    }
+
+    /**
+     * Get the organization from an id
+     */
+    static async getOrganizationFromId(id: string): Promise<Organization> {
+        return await getDocument<Organization>('organizations', { id })
+    }
+
+    /**
+     * Get the organization associated with a team number
+     */
+    static async getOrganizationsFromTeamNumber(teamNumber: number): Promise<Organization[]> {
+        return await getDocuments<Organization>('organizations', { teamNumber })
+    }
+
+    /**
+     * Create an organization
+     */
+    static async createOrganization(user: User, teamNumber: number, name: string) {
+        const id = await nanoid()
+
+        const avatar = await this.createAvatarForId(id)
+
+        const organization = await insertOne<Organization>(
+            'organizations',
+            {
+                id,
+                name,
+                bio: null,
+                teamNumber,
+                avatar,
+                members: [
+                    {
+                        id: user.id,
+                        role: Role.OWNER,
+                    },
+                ],
+                defaultRole: Role.VIEWER,
+                createdAt: new Date(),
+                updatedAt: new Date(),
+            },
+            true
+        )
+
+        return organization
     }
 }
 

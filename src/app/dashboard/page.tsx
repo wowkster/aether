@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers'
-import Link from 'next/link'
 import { redirect } from 'next/navigation'
 import Database from '../../util/database/mongo'
+import OrgTester from './OrgTester'
 
 const getSession = async () => {
     const nextCookies = cookies()
@@ -24,6 +24,8 @@ export default async function Dashboard() {
         <>
             <h1>Dashboard</h1>
             {/* <pre>{JSON.stringify(user, null, 4)}</pre> */}
+
+            <OrgTester />
         </>
     )
 }
