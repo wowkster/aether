@@ -8,6 +8,12 @@ const nextConfig = {
     sassOptions: {
         includePaths: [path.join(__dirname, 'src', 'styles')],
     },
+    webpack(options) {
+        return {...options,
+            optimization: {
+                moduleIds: 'deterministic',
+            }}
+    },
     swcMinify: false,
     images: {
         domains: ['aether.localhost'],
