@@ -24,6 +24,8 @@ import { OAuthType, User } from '../../../types/User'
 import { setCookie } from '../../../util/cookie'
 import Database from '../../../util/database/mongo'
 import { OctokitInstance } from '@octokit/oauth-app/dist-types/types'
+import { Cookies } from '../../../util/auth'
+import type { ReqCookies } from '../../../util/auth'
 
 if (!process.env.DISCORD_OAUTH_CLIENT_ID) throw new Error('DISCORD_OAUTH_CLIENT_ID not set in environment')
 if (!process.env.DISCORD_OAUTH_CLIENT_SECRET) throw new Error('DISCORD_OAUTH_CLIENT_SECRET not set in environment')
@@ -108,9 +110,6 @@ export class SignupCompletionRequest {
     @IsAscii()
     lastName!: string
 }
-
-export type ReqCookies = Partial<{ [key: string]: string }>
-export const Cookies = createParamDecorator<ReqCookies>(req => req.cookies)
 
 const SESSION_COOKIE_OPTIONS: CookieSerializeOptions = {
     httpOnly: true,
