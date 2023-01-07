@@ -12,6 +12,8 @@ const OrgTester = () => {
                         name: 'Test Org',
                     }).then(res => {
                         console.log(res)
+                    }).catch(err => {
+                        console.log(err)
                     })
                 }}>Create Org</button>
         </>

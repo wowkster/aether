@@ -65,7 +65,7 @@ export default function Nav() {
                             icon={icon}
                             key={text}
                             active={
-                                href == pathname || (pathname === '/dashboard' && href === '/dashboard/drive_team')
+                                href === pathname || (pathname === '/dashboard' && href === '/dashboard/drive_team')
                             }>
                             {text}
                         </NavLink>

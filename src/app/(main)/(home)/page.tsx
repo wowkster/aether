@@ -7,7 +7,7 @@ import styles from './home.page.module.scss'
 
 import ui from '../../../../public/img/interface-transformed.png'
 
-export default async function Home() {
+export default function Home() {
     return (
         <>
             <section className={styles.hero}>

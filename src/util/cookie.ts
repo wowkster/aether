@@ -12,14 +12,14 @@ export const setCookie = (
     value: unknown,
     options: CookieSerializeOptions = {}
 ) => {
-    const stringValue = typeof value === 'object' ? 'j:' + JSON.stringify(value) : String(value)
+    const stringValue = typeof value === 'object' ? `j:${JSON.stringify(value)}` : String(value)
 
     if ('maxAge' in options) {
         options.expires = new Date(Date.now() + options.maxAge)
         options.maxAge /= 1000
     }
 
-    let currentValue = res.getHeader('Set-Cookie') as string[]
+    const currentValue = res.getHeader('Set-Cookie') as string[]
 
     if (currentValue) {
         res.setHeader('Set-Cookie', [...currentValue, serialize(name, stringValue, options)])

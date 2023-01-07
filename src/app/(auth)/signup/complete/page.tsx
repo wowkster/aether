@@ -1,7 +1,7 @@
 import styles from '../../auth.module.scss'
 
-import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 import Database from '../../../../util/database/mongo'
 import SignupCompletionForm from './SignupCompletionForm'
@@ -30,7 +30,7 @@ const validateSessionAndLoginState = async () => {
  * This page is shown after an OAuth signup, if the first and
  * last name can not be inferred from the OAuth provider
  */
-const SignupCompletion = async props => {
+const SignupCompletion = async _props => {
     // Request will be redirected if this page is not necessary
     await validateSessionAndLoginState()
 

@@ -7,7 +7,7 @@ import logoDark from '../../../public/img/logo-beta-dark.svg'
 import styles from './auth.layout.module.scss'
 import { combine } from '../../util/styles'
 
-export default async function LoginLayout({ children }) {
+export default function LoginLayout({ children }) {
     return (
         <div className={styles.page_container}>
             <main className={styles.main}>

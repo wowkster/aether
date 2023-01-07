@@ -10,11 +10,11 @@ import { combine } from '../../util/styles'
 
 import styles from './NavBar.module.scss'
 
-const getUser = async (): Promise<User | null> => {
+const getUser = (): Promise<User | null> => {
     const nextCookies = cookies()
     const session = nextCookies.get('session')
 
-    return await Database.getUserFromSession(session?.value)
+    return Database.getUserFromSession(session?.value)
 }
 
 export default async function NavBar() {

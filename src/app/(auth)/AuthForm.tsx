@@ -1,6 +1,6 @@
 'use client'
 
-import { FC } from 'react'
+import React, { FC } from 'react'
 
 import { BiErrorAlt } from 'react-icons/bi'
 import { PulseLoader } from 'react-spinners'

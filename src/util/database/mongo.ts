@@ -2,14 +2,17 @@ import DiscordOauth2 from 'discord-oauth2'
 import {
     DeleteObjectCommand,
     DeleteObjectCommandInput,
+    DeleteObjectCommandOutput,
     GetObjectCommand,
     GetObjectCommandInput,
+    GetObjectCommandOutput,
     PutObjectCommand,
     PutObjectCommandInput,
+    PutObjectCommandOutput,
     S3Client,
 } from '@aws-sdk/client-s3'
 import bcrypt from 'bcryptjs'
-import { FindOptions, MongoClient } from 'mongodb'
+import { Document, FindOptions, InsertManyResult, MongoClient } from 'mongodb'
 
 import { createAvatar } from '@dicebear/avatars'
 import * as style from '@dicebear/avatars-identicon-sprites'
@@ -31,14 +34,16 @@ export const client = new MongoClient(process.env.MONGO_URL ?? 'mongodb://localh
 
 const db = client.db(process.env.MONGO_DATABASE ?? 'aether')
 
-async function createIndexes() {
+async function createIndexes(): Promise<void> {
     await client.connect()
 
-    db.collection('sessions').createIndex({ id: 1 }, { unique: true })
-    db.collection('sessions').createIndex({ updatedAt: 1 }, { expireAfterSeconds: 3600 })
+    await db.collection('sessions').createIndex({ id: 1 }, { unique: true })
+    await db.collection('sessions').createIndex({ updatedAt: 1 }, { expireAfterSeconds: 3600 })
 }
 
-createIndexes()
+createIndexes().catch(err => {
+    console.error('Failed to create indexes:', err)
+})
 
 /* INIT S3 CLIENT */
 
@@ -65,31 +70,31 @@ export default class Database {
         return user
     }
 
-    static async getDbUserFromId(id: NanoID) {
-        return await getDocument<DbUser>('users', { id })
+    static getDbUserFromId(id: NanoID): Promise<DbUser> {
+        return getDocument<DbUser>('users', { id })
     }
 
-    static async getUserFromId(id: NanoID) {
+    static async getUserFromId(id: NanoID): Promise<User> {
         return this.cleanUser(await this.getDbUserFromId(id))
     }
 
-    static async getDbUserFromEmail(email: string) {
-        return await getDocument<DbUser>('users', { email })
+    static getDbUserFromEmail(email: string): Promise<DbUser> {
+        return getDocument<DbUser>('users', { email })
     }
 
-    static async getUserFromEmail(email: string) {
+    static async getUserFromEmail(email: string): Promise<User> {
         return this.cleanUser(await this.getDbUserFromEmail(email))
     }
 
-    static async getUserOrganizations(id: NanoID) {
-        return await getDocuments<Organization>('organizations', { members: id })
+    static getUserOrganizations(id: NanoID): Promise<Organization[]> {
+        return getDocuments<Organization>('organizations', { members: id })
     }
 
     /**
      * Create a unique custom avatar for a user using dicebear
      * @param id The user's id
      */
-    static async createAvatarForId(id: NanoID) {
+    static async createAvatarForId(id: NanoID): Promise<string> {
         // Create the avatar using dicebear
         const avatarDataURI = createAvatar(style, {
             seed: id,
@@ -124,7 +129,7 @@ export default class Database {
      * @param id The user's id
      * @param url The url of the avatar
      */
-    static async createAvatarForUserFromUrl(id: NanoID, url: string) {
+    static async createAvatarForUserFromUrl(id: NanoID, url: string): Promise<string> {
         // Download avatar into buffer using axios
         const avatarResponse = await axios.get(url, { responseType: 'arraybuffer' })
         const avatarBuffer = avatarResponse.data
@@ -148,7 +153,13 @@ export default class Database {
         return hash
     }
 
-    static async createUserFromSignupRequest({ username, firstName, lastName, email, password }: SignupRequest) {
+    static async createUserFromSignupRequest({
+        username,
+        firstName,
+        lastName,
+        email,
+        password,
+    }: SignupRequest): Promise<User> {
         // Create the user's ID
         const id = await nanoid()
 
@@ -179,7 +190,7 @@ export default class Database {
         return this.cleanUser(user)
     }
 
-    static async createUserFromDiscordOAuth(discordUser: DiscordOauth2.User) {
+    static async createUserFromDiscordOAuth(discordUser: DiscordOauth2.User): Promise<User> {
         // Create the user's ID
         const id = await nanoid()
 
@@ -211,7 +222,7 @@ export default class Database {
         return this.cleanUser(user)
     }
 
-    static async createUserFromGoogleOAuth(profileData, email: string) {
+    static async createUserFromGoogleOAuth(profileData, email: string): Promise<User> {
         // Create the user's ID
         const id = await nanoid()
 
@@ -258,7 +269,7 @@ export default class Database {
         username: string
         avatarURL: string
         email: string
-    }) {
+    }): Promise<User> {
         // Create the user's ID
         const id = await nanoid()
 
@@ -304,17 +315,17 @@ export default class Database {
         return this.cleanUser(user)
     }
 
-    static async validatePassword(plainTextPassword: string, hash: string) {
-        return await bcrypt.compare(plainTextPassword, hash)
+    static validatePassword(plainTextPassword: string, hash: string): Promise<boolean> {
+        return bcrypt.compare(plainTextPassword, hash)
     }
 
     /**
      * Create a session for a user
      */
-    static async createSessionFromUser(user: User | NanoID) {
+    static async createSessionFromUser(user: User | NanoID): Promise<Session> {
         const id = typeof user === 'string' ? user : user.id
 
-        return await insertOne<Session>(
+        return insertOne<Session>(
             'sessions',
             { id: await nanoid(), userId: id, createdAt: new Date(), expireAfter: new Date() },
             true
@@ -324,12 +335,12 @@ export default class Database {
     /**
      * Get the user from the session id
      */
-    static async getUserFromSession(sessionId: NanoID) {
+    static async getUserFromSession(sessionId: NanoID): Promise<User> {
         const session = await getDocument<Session>('sessions', { id: sessionId })
 
         if (!session) return null
 
-        return await this.getUserFromId(session.userId)
+        return this.getUserFromId(session.userId)
     }
 
     /**
@@ -337,40 +348,40 @@ export default class Database {
      *
      * @param sessionId The session id
      */
-    static async updateSessionDate(sessionId: NanoID) {
+    static async updateSessionDate(sessionId: NanoID): Promise<Session> {
         const session = await getDocument<Session>('sessions', { id: sessionId })
 
         // If the session is not close to expiring, don't update it
         if (session?.expireAfter > new Date()) return session
 
-        return await updateDocument<Session>('sessions', { id: sessionId }, { $set: { expireAfter: new Date() } })
+        return updateDocument<Session>('sessions', { id: sessionId }, { $set: { expireAfter: new Date() } })
     }
 
     /**
      * Destroy a session
      */
-    static async destroySession(sessionId: NanoID) {
-        return await deleteOne('sessions', { id: sessionId })
+    static async destroySession(sessionId: NanoID): Promise<void> {
+        await deleteOne('sessions', { id: sessionId })
     }
 
     /**
      * Get the organization from an id
      */
-    static async getOrganizationFromId(id: string): Promise<Organization> {
-        return await getDocument<Organization>('organizations', { id })
+    static getOrganizationFromId(id: string): Promise<Organization> {
+        return getDocument<Organization>('organizations', { id })
     }
 
     /**
      * Get the organization associated with a team number
      */
-    static async getOrganizationsFromTeamNumber(teamNumber: number): Promise<Organization[]> {
-        return await getDocuments<Organization>('organizations', { teamNumber })
+    static getOrganizationsFromTeamNumber(teamNumber: number): Promise<Organization[]> {
+        return getDocuments<Organization>('organizations', { teamNumber })
     }
 
     /**
      * Create an organization
      */
-    static async createOrganization(user: User, teamNumber: number, name: string) {
+    static async createOrganization(user: User, teamNumber: number, name: string): Promise<Organization> {
         const id = await nanoid()
 
         const avatar = await this.createAvatarForId(id)
@@ -417,7 +428,7 @@ export async function getDocuments<T>(col: string, query = {}, limit = 0, skip =
     })
 }
 
-export async function getDocument<T>(col: string, query: object): Promise<T> {
+export async function getDocument<T>(col: string, query: Document): Promise<T> {
     await client.connect()
 
     const doc = await db.collection(col).findOne(query)
@@ -425,15 +436,19 @@ export async function getDocument<T>(col: string, query: object): Promise<T> {
     return doc as unknown as T
 }
 
-export async function upsertDocument(col, filter, update) {
+export async function upsertDocument<T>(col: string, filter: Document, update: Document): Promise<T> {
     await client.connect()
 
-    return db.collection(col).updateOne(filter, update, {
+    const updated = await db.collection(col).findOneAndUpdate(filter, update, {
         upsert: true,
+        returnDocument: 'after',
     })
+
+    delete updated.value._id
+    return updated.value as unknown as T
 }
 
-export async function updateDocument<T>(col: string, filter: object, update: object): Promise<T> {
+export async function updateDocument<T>(col: string, filter: Document, update: Document): Promise<T> {
     await client.connect()
 
     const updated = await db.collection(col).findOneAndUpdate(filter, update, {
@@ -444,36 +459,37 @@ export async function updateDocument<T>(col: string, filter: object, update: obj
     return updated.value as unknown as T
 }
 
-export async function updateDocuments<T>(col: string, filter: object, update: object): Promise<T> {
+export async function updateDocuments<T>(col: string, filter: Document, update: Document): Promise<T> {
     await client.connect()
 
     return (await db.collection(col).updateMany(filter, update)) as T
 }
 
-export async function insertMany(col, documents) {
+export async function insertMany<T>(col: string, documents: T[]): Promise<InsertManyResult<T>> {
     await client.connect()
 
-    return await db.collection(col).insertMany(documents, { ordered: true, fullResponse: true })
+    return db.collection(col).insertMany(documents, { ordered: true, fullResponse: true })
 }
 
 export async function insertOne<T>(col: string, document: T, fetch: true): Promise<T>
 export async function insertOne<T>(col: string, document: T, fetch?: false): Promise<{ insertedId: string }>
-export async function insertOne<T>(col: string, document: T, fetch?: boolean) {
+export async function insertOne<T>(col: string, document: T, fetch?: boolean): Promise<T | { insertedId: string }> {
     await client.connect()
 
     const res = await db.collection(col).insertOne(document, { fullResponse: true })
 
     if (!fetch) return res as unknown as { insertedId: string }
-    else return (await getDocument<T>(col, { _id: res.insertedId })) as T
+
+    return (await getDocument<T>(col, { _id: res.insertedId })) as T
 }
 
-export async function deleteOne(col, query) {
+export async function deleteOne(col: string, query: Document): Promise<void> {
     await client.connect()
 
-    return await db.collection(col).deleteOne(query)
+    await db.collection(col).deleteOne(query)
 }
 
-export function filterUpdate(update: object) {
+export function filterUpdate(update: Document): Document {
     const filteredUpdate = {}
     for (const key in update) {
         if (update[key] !== undefined) filteredUpdate[key] = update[key]
@@ -483,7 +499,7 @@ export function filterUpdate(update: object) {
 
 /* Digital Ocean Spaces Helpers */
 
-export async function getFile(path: string) {
+export async function getFile(path: string): Promise<GetObjectCommandOutput> {
     const params: GetObjectCommandInput = {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: path,
@@ -497,7 +513,7 @@ export async function getFile(path: string) {
     }
 }
 
-export async function uploadFile(path: string, content: Buffer, contentType: string) {
+export async function uploadFile(path: string, content: Buffer, contentType: string): Promise<PutObjectCommandOutput> {
     const params: PutObjectCommandInput = {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: path,
@@ -514,13 +530,13 @@ export async function uploadFile(path: string, content: Buffer, contentType: str
     }
 }
 
-export async function deleteFile(path: string) {
+export async function deleteFile(path: string): Promise<DeleteObjectCommandOutput> {
     const params: DeleteObjectCommandInput = {
         Bucket: process.env.S3_BUCKET_NAME,
         Key: path,
     }
 
     const data = await s3Client.send(new DeleteObjectCommand(params))
-    console.log('Successfully deleted object: ' + params.Bucket + '/' + params.Key)
+    console.log(`Successfully deleted object: ${params.Bucket}/${params.Key}`)
     return data
 }

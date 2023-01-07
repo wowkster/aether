@@ -3,29 +3,27 @@ import type { NextApiResponse } from 'next'
 import {
     Body,
     ConflictException,
-    createHandler,
-    createParamDecorator,
-    Get,
+    createHandler, Get,
     Header,
     HttpException,
     Post,
     Query,
     Res,
     UnauthorizedException,
-    ValidationPipe,
+    ValidationPipe
 } from 'next-api-decorators'
 
+import { OAuthApp as GitHubOauth2 } from '@octokit/oauth-app'
 import DiscordOauth2 from 'discord-oauth2'
 import { OAuth2Client as GoogleOauth2 } from 'google-auth-library'
-import { OAuthApp as GitHubOauth2 } from '@octokit/oauth-app'
 
+import { OctokitInstance } from '@octokit/oauth-app/dist-types/types'
 import { CookieSerializeOptions } from 'cookie'
 import { OAuthType, User } from '../../../types/User'
+import type { ReqCookies } from '../../../util/auth'
+import { Cookies } from '../../../util/auth'
 import { setCookie } from '../../../util/cookie'
 import Database from '../../../util/database/mongo'
-import { OctokitInstance } from '@octokit/oauth-app/dist-types/types'
-import { Cookies } from '../../../util/auth'
-import type { ReqCookies } from '../../../util/auth'
 
 if (!process.env.DISCORD_OAUTH_CLIENT_ID) throw new Error('DISCORD_OAUTH_CLIENT_ID not set in environment')
 if (!process.env.DISCORD_OAUTH_CLIENT_SECRET) throw new Error('DISCORD_OAUTH_CLIENT_SECRET not set in environment')
@@ -247,7 +245,7 @@ class AuthHandler {
         await Database.destroySession(session)
 
         // Redirect to home page
-        res.setHeader('Refresh', '0; url=' + '/')
+        res.setHeader('Refresh', '0; url=/')
         res.end()
     }
 
@@ -258,6 +256,7 @@ class AuthHandler {
         })
 
         const google = googleOAuth.generateAuthUrl({
+            // eslint-disable-next-line camelcase
             access_type: 'offline',
             scope: [
                 'https://www.googleapis.com/auth/userinfo.profile',
@@ -328,11 +327,11 @@ class AuthHandler {
 
         if (userCreated) {
             // Redirect to the signup completion page
-            res.setHeader('Refresh', '0; url=' + '/signup/complete')
+            res.setHeader('Refresh', '0; url=/signup/complete')
             res.end()
         } else {
             // Redirect to dashboard
-            res.setHeader('Refresh', '0; url=' + '/dashboard')
+            res.setHeader('Refresh', '0; url=/dashboard')
             res.end()
         }
     }
@@ -374,7 +373,7 @@ class AuthHandler {
         setCookie(response, 'session', session.id, SESSION_COOKIE_OPTIONS)
 
         // Redirect to dashboard
-        response.setHeader('Refresh', '0; url=' + '/dashboard')
+        response.setHeader('Refresh', '0; url=/dashboard')
         response.end()
     }
 
@@ -447,11 +446,11 @@ class AuthHandler {
 
         if (userCreated) {
             // Redirect to the signup completion page
-            res.setHeader('Refresh', '0; url=' + '/signup/complete')
+            res.setHeader('Refresh', '0; url=/signup/complete')
             res.end()
         } else {
             // Redirect to dashboard
-            res.setHeader('Refresh', '0; url=' + '/dashboard')
+            res.setHeader('Refresh', '0; url=/dashboard')
             res.end()
         }
     }

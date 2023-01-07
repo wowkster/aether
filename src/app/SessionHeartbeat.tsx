@@ -7,6 +7,8 @@ const SessionHeartbeat = () => {
         // Send heartbeat to server to keep session alive every 5 minutes
         fetch('http://localhost:3000/api/auth/session/heartbeat', {
             method: 'POST',
+        }).catch((err) => {
+            console.log(err)
         })
     }, 1000 * 60 * 5)
 

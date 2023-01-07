@@ -9,8 +9,8 @@ declare module 'next' {
     }
 }
 
-export const RequireAuthSession = createMiddlewareDecorator(async (req: NextApiRequest, res: NextApiResponse) => {
-    let session = req.cookies['session']
+export const RequireAuthSession = createMiddlewareDecorator(async (req: NextApiRequest, _res: NextApiResponse) => {
+    const session = req.cookies['session']
 
     const user = await Database.getUserFromSession(session)
 

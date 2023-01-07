@@ -23,7 +23,7 @@ class OrgHandler {
     async createOrg(@Body(ValidationPipe) { teamNumber, name }: CreateOrgRequest, @UserSession() user: User) {
         console.log('Creating org:', { teamNumber, name })
 
-        const org = await Database.createOrganization(user, teamNumber, name)
+        await Database.createOrganization(user, teamNumber, name)
 
         return {
             message: 'Creating organization',

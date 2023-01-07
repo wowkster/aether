@@ -23,7 +23,7 @@ export default async function Dashboard() {
     return (
         <>
             <h1>Dashboard</h1>
-            {/* <pre>{JSON.stringify(user, null, 4)}</pre> */}
+            <pre>{JSON.stringify(user, null, 4)}</pre>
 
             <OrgTester />
         </>

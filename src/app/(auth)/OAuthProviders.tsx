@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { FC } from 'react'
+import React, { FC } from 'react'
 import { AiFillGithub } from 'react-icons/ai'
 import { FaDiscord } from 'react-icons/fa'
 import { FcGoogle } from 'react-icons/fc'
