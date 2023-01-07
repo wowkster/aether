@@ -7,7 +7,7 @@ const OrgTester = () => {
         <>
             <button
                 onClick={() => {
-                    axios.post('/api/org', {
+                    axios.post('/api/orgs', {
                         teamNumber: 303,
                         name: 'Test Org',
                     }).then(res => {

@@ -381,7 +381,10 @@ export default class Database {
     /**
      * Create an organization
      */
-    static async createOrganization(user: User, teamNumber: number, name: string): Promise<Organization> {
+    static async createOrganization(
+        user: User,
+        { teamNumber, name }: Pick<Organization, 'teamNumber' | 'name'>
+    ): Promise<Organization> {
         const id = await nanoid()
 
         const avatar = await this.createAvatarForId(id)
