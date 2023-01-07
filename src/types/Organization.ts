@@ -12,7 +12,7 @@ export interface Organization {
     name: string
     bio: string | null
     teamNumber: number | null
-    avatar: string | null // Hash of the avatar image
+    avatar: string | null
     members: {
         id: NanoID
         role: Role
