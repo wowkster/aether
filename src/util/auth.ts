@@ -5,7 +5,7 @@ import Database from './database/mongo'
 
 declare module 'next' {
     interface NextApiRequest {
-        user: User
+        user?: User
     }
 }
 
@@ -19,6 +19,12 @@ export const RequireAuthSession = createMiddlewareDecorator(async (req: NextApiR
     }
 
     req.user = user
+})
+
+export const GetAuthSession = createMiddlewareDecorator(async (req: NextApiRequest, _res: NextApiResponse) => {
+    const session = req.cookies['session']
+
+    req.user = await Database.getUserFromSession(session)
 })
 
 export type ReqCookies = Partial<{ [key: string]: string }>
