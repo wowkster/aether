@@ -8,7 +8,7 @@ class UsersHandler {
     @GetAuthSession()
     async getOrg(@UserSession() user: User | null, @Param('id') id: string) {
         // If user is requesting themselves, use a shortcut AND return the ENTIRE object
-        if (user?.id == id) return user
+        if (user?.id === id) return user
 
         // Otherwise, request the user from db and strip the more sensitive data
         const fullUser = await Database.getUserFromId(id)
