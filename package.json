@@ -27,6 +27,7 @@
         "discord-oauth2": "^2.10.1",
         "eslint": "^8.31.0",
         "eslint-config-next": "13.0.5",
+        "eslint-plugin-prettier": "^4.2.1",
         "google-auth-library": "^8.7.0",
         "mongodb": "^4.12.1",
         "nanoid": "^4.0.0",
@@ -53,7 +54,7 @@
         "@types/sharp": "^0.31.0",
         "@typescript-eslint/eslint-plugin": "^5.48.0",
         "@typescript-eslint/parser": "^5.48.0",
-        "@wowkster/prettier-config": "^1.0.1",
+        "@wowkster/prettier-config": "^1.1.2",
         "prettier": "^2.8.0",
         "sass": "^1.56.1",
         "typescript-eslint": "^0.0.1-alpha.0"
