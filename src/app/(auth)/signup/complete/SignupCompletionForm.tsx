@@ -85,8 +85,7 @@ const SignupForm: FC = () => {
             disabled={!formIsValid || isFetching || !!data}
             isFetching={isFetching}
             error={isError && translateError(error as SignUpCompletionError)}
-            onSubmit={() => refetch()}
-        >
+            onSubmit={() => refetch()}>
             <input
                 ref={firstNameRef}
                 type='text'

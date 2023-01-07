@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 
 .nav {
     // border: 1px solid red;
@@ -80,7 +80,7 @@
 
                 &:hover {
                     color: white;
-                }                
+                }
 
                 & *:not(::before) {
                     z-index: 100;

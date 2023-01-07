@@ -78,8 +78,7 @@ const LoginForm: FC = () => {
             disabled={!formIsValid || isFetching || data}
             isFetching={isFetching}
             error={isError && translateError(error as LoginError)}
-            onSubmit={() => refetch()}
-        >
+            onSubmit={() => refetch()}>
             <input
                 ref={emailRef}
                 type='email'

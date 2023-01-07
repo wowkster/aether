@@ -26,7 +26,12 @@ export default async function NavBar() {
                 <div className={styles.nav__side}>
                     <Link href='/'>
                         <Image src={logo} alt={'Aether logo'} className={styles.logo} height={36} />
-                        <Image src={logoDark} alt={'Aether logo'} className={combine(styles.logo, styles.logo_dark)} height={36} />
+                        <Image
+                            src={logoDark}
+                            alt={'Aether logo'}
+                            className={combine(styles.logo, styles.logo_dark)}
+                            height={36}
+                        />
                     </Link>
                     <div className={styles.nav__links}>
                         <Link href={'#'}>Features</Link>
@@ -51,14 +56,12 @@ export default async function NavBar() {
                             </div>
                             <Link
                                 href={'/dashboard'}
-                                className={combine(styles.nav__button, styles.nav__button__primary)}
-                            >
+                                className={combine(styles.nav__button, styles.nav__button__primary)}>
                                 Dashboard
                             </Link>
                             <Link
                                 href={'/api/auth/logout'}
-                                className={combine(styles.nav__button, styles.nav__button__danger)}
-                            >
+                                className={combine(styles.nav__button, styles.nav__button__danger)}>
                                 Log Out
                             </Link>
                         </>
@@ -69,8 +72,7 @@ export default async function NavBar() {
                             </Link>
                             <Link
                                 href={'/signup'}
-                                className={combine(styles.nav__button, styles.nav__button__secondary)}
-                            >
+                                className={combine(styles.nav__button, styles.nav__button__secondary)}>
                                 Sign Up
                             </Link>
                         </>

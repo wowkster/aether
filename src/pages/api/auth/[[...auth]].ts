@@ -3,14 +3,15 @@ import type { NextApiResponse } from 'next'
 import {
     Body,
     ConflictException,
-    createHandler, Get,
+    createHandler,
+    Get,
     Header,
     HttpException,
     Post,
     Query,
     Res,
     UnauthorizedException,
-    ValidationPipe
+    ValidationPipe,
 } from 'next-api-decorators'
 
 import { OAuthApp as GitHubOauth2 } from '@octokit/oauth-app'
