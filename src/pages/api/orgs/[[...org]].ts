@@ -23,6 +23,11 @@ class OrgsHandler {
     async createOrg(@UserSession() user: User, @Body(ValidationPipe) { teamNumber, name }: CreateOrgRequest) {
         return Database.createOrganization(user, { teamNumber, name })
     }
+
+    @Get('/:id')
+    async getOrg(@Param('id') id: string) {
+        return Database.getOrganizationFromId(id)
+    }
 }
 
 export default createHandler(OrgsHandler)
