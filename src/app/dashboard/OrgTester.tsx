@@ -29,7 +29,7 @@ const OrgTester = () => {
                 onSubmit={evt => {
                     evt.preventDefault()
                     axios
-                        .post(`/api/orgs/${orgId}/invite`, {
+                        .post(`/api/orgs/${orgId}/invites`, {
                             email: 'test@wowkster.com',
                         })
                         .then(res => {
