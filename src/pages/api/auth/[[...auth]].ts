@@ -112,7 +112,7 @@ export class SignupCompletionRequest {
 
 const SESSION_COOKIE_OPTIONS: CookieSerializeOptions = {
     httpOnly: true,
-    sameSite: 'strict',
+    sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
     path: '/',
 }
