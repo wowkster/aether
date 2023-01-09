@@ -44,11 +44,14 @@ export async function sendInvitationEmail(invitation: OrganizationInvitation) {
             {
                 to: [
                     {
-                        email: 'test@wowkster.com',
+                        email: invitation.userEmail,
                     },
                 ],
                 dynamicTemplateData: {
                     Invitation_Id: invitation.id,
+                    Invitation_Accept_Url: `${
+                        process.env.NODE_ENV === 'production' ? 'https://aetherscout.com' : 'http://localhost:3000'
+                    }/api/orgs/${org.id}/invites/${invitation.id}`,
                     Organization_Id: invitation.organizationId,
                     Organization_Name: org.name,
                     Organization_Tag: org.tag,
@@ -72,5 +75,5 @@ export async function sendInvitationEmail(invitation: OrganizationInvitation) {
 
     await SendGridMail.send(msg)
 
-    console.log('Email sent')
+    console.log(`Invitation email sent to '${invitation.userEmail}' for invitation '${invitation.id}'`)
 }
