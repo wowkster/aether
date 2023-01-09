@@ -478,6 +478,56 @@ export default class Database {
 
         return invitation
     }
+
+    /**
+     * Get an invitation from its id
+     */
+    static async getOrganizationInvitationFromId(id: NanoID): Promise<OrganizationInvitation> {
+        const org = await getDocument<Organization>('organizations', { 'invitations.id': id })
+
+        return org?.invitations.find(invitation => invitation.id === id) ?? null
+    }
+
+    /**
+     * Add a user to an organization from an invite
+     */
+    static async addUserToOrganization(organization: NanoID, user: NanoID, role = Role.VIEWER): Promise<void> {
+        // Get the organization
+        const org = await this.getOrganizationFromId(organization)
+
+        // Add the user to the organization
+        await updateDocument<Organization>(
+            'organizations',
+            { id: org.id },
+            {
+                $push: {
+                    members: {
+                        id: user,
+                        role,
+                    },
+                },
+            }
+        )
+    }
+
+    /**
+     * Delete an invitation
+     */
+    static async deleteOrganizationInvitation(invitation: NanoID): Promise<void> {
+        const org = await getDocument<Organization>('organizations', { 'invitations.id': invitation })
+
+        await updateDocument<Organization>(
+            'organizations',
+            { id: org.id },
+            {
+                $pull: {
+                    invitations: {
+                        id: invitation,
+                    },
+                },
+            }
+        )
+    }
 }
 
 export async function getDocuments<T>(col: string, query = {}, limit = 0, skip = 0, sort = false): Promise<T[]> {

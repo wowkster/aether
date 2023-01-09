@@ -1,18 +1,21 @@
 import { IsAscii, IsEmail, IsInt, IsNotEmpty, MaxLength, MinLength } from 'class-validator'
+import type { NextApiResponse } from 'next'
 import {
     BadRequestException,
     Body,
     createHandler,
     Get,
     HttpCode,
+    NotFoundException,
     Param,
     Post,
+    Res,
     UnauthorizedException,
     ValidationPipe,
 } from 'next-api-decorators'
 import { Role } from '../../../types/Organization'
 import type { User } from '../../../types/User'
-import { RequireAuthSession, UserSession } from '../../../util/auth'
+import { GetAuthSession, RequireAuthSession, UserSession } from '../../../util/auth'
 import Database from '../../../util/database/mongo'
 import { sendInvitationEmail } from '../../../util/email'
 
@@ -48,9 +51,11 @@ class OrgsHandler {
 
     /**
      * Invite a member to an organization
+     *
+     * TODO: Add rate limiting
      */
     @HttpCode(202)
-    @Post('/:id/invite')
+    @Post('/:id/invites')
     @RequireAuthSession()
     async addMember(
         @UserSession() user: User,
@@ -78,6 +83,55 @@ class OrgsHandler {
 
         // Send email to user
         await sendInvitationEmail(invitation)
+    }
+
+    @Get('/:organizationId/invites/:invitationId')
+    @GetAuthSession()
+    async fulfilInvite(
+        @UserSession() user: User | null,
+        @Param('organizationId') organizationId: string,
+        @Param('invitationId') invitationId: string,
+        @Res() res: NextApiResponse<unknown>
+    ) {
+        // Get the organization
+        const org = await Database.getOrganizationFromId(organizationId)
+
+        // If the organization does not exist, throw an error
+        if (!org) {
+            throw new NotFoundException('Organization not found')
+        }
+
+        // Get the invitation
+        const invitation = await Database.getOrganizationInvitationFromId(invitationId)
+
+        // If the invitation does not exist, throw an error
+        if (!invitation) {
+            throw new NotFoundException('Invitation not found')
+        }
+
+        // If the user session does not exist, redirect to signup page
+        if (!user) {
+            return res.redirect(`/signup?redirect=/api/invites/${invitationId}`)
+        }
+
+        // Make sure that the user's email matches that of the invite
+        if (invitation.userEmail !== user.email) {
+            throw new UnauthorizedException('You are not the recipient of this invitation')
+        }
+
+        // Delete the invitation
+        await Database.deleteOrganizationInvitation(invitationId)
+
+        // Make sure that the user is not already a member of the organization
+        if (org.members.find(member => member.id === user.id)) {
+            return res.redirect(`/dashboard?organization=${organizationId}`)
+        }
+
+        // Add user to organization
+        await Database.addUserToOrganization(organizationId, user.id, invitation.role)
+
+        // Redirect to dashboard
+        return res.redirect(`/dashboard?organization=${organizationId}`)
     }
 }
 
