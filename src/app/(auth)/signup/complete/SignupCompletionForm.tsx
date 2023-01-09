@@ -51,7 +51,9 @@ const handleSignupCompletion = async ({ firstName, lastName }: SignupCompletionP
     }
 }
 
-const SignupForm: FC = () => {
+const SignupForm: FC<{
+    redirect?: string
+}> = ({ redirect }) => {
     const router = useRouter()
 
     const [firstName, setFirstName] = useState('')
@@ -69,8 +71,8 @@ const SignupForm: FC = () => {
 
     // If successfully signed up, redirect to the dashboard
     useEffect(() => {
-        if (data) router.push('/dashboard')
-    }, [data, router])
+        if (data) router.push(`/dashboard${redirect ? `?redirect=${redirect}` : ''}`)
+    }, [data, router, redirect])
 
     // If a conflict error is thrown, redirect to the dashboard anyway
     useEffect(() => {
