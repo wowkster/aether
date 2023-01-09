@@ -18,7 +18,7 @@ const Signup = async props => {
             <SignupForm />
             <p className={styles.or}>OR</p>
             {/* @ts-expect-error Server Component */}
-            <OAuthProviders />
+            <OAuthProviders redirect={props.searchParams.redirect} />
             <hr className={styles.rule} />
             <div className={styles.auth_links}>
                 <Link href={'/about'}>What is Aether?</Link>

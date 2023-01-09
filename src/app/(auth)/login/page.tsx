@@ -18,7 +18,7 @@ const Login = async props => {
             <LoginForm />
             <p className={styles.or}>OR</p>
             {/* @ts-expect-error Server Component */}
-            <OAuthProviders />
+            <OAuthProviders redirect={props.searchParams.redirect} />
             <hr className={styles.rule} />
             <div className={styles.auth_links}>
                 <Link href={'/forgot'}>Can&apos;t log in?</Link>

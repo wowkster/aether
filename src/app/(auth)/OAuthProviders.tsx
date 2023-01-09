@@ -13,14 +13,18 @@ interface ProviderURLs {
     github: string
 }
 
-const getOAuthProviders = async (): Promise<ProviderURLs> => {
-    const res = await fetch('http://localhost:3000/api/auth/providers')
+const getOAuthProviders = async (redirect?: string): Promise<ProviderURLs> => {
+    const res = await fetch(`http://localhost:3000/api/auth/providers${redirect ? `?redirect=${redirect}` : ''}`)
     const providers = await res.json()
     return providers
 }
 
-export default async function OAuthProviders() {
-    const { discord, google, github } = await getOAuthProviders()
+export interface OAuthProvidersProps {
+    redirect?: string
+}
+
+export default async function OAuthProviders({ redirect }: OAuthProvidersProps) {
+    const { discord, google, github } = await getOAuthProviders(redirect)
 
     return (
         <div className={styles.button_group}>
