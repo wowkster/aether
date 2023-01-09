@@ -251,9 +251,12 @@ class AuthHandler {
     }
 
     @Get('/providers')
-    public getProviderURL() {
+    public getProviderURL(@Query('redirect') redirect: string) {
+        const state = redirect ? Buffer.from(JSON.stringify({ redirect })).toString('base64') : undefined
+
         const discord = discordOAuth.generateAuthUrl({
             scope: ['identify', 'email'],
+            state,
         })
 
         const google = googleOAuth.generateAuthUrl({
@@ -264,10 +267,12 @@ class AuthHandler {
                 'https://www.googleapis.com/auth/userinfo.email',
                 'openid',
             ],
+            state,
         })
 
         const { url: github } = githubOAuth.getWebFlowAuthorizationUrl({
             scopes: ['user:email', 'read:user'],
+            state,
         })
 
         return {
@@ -277,8 +282,21 @@ class AuthHandler {
         }
     }
 
+    private static parseState(state: string | null) {
+        // Extract the redirect url from the state if it exits
+        try {
+            return JSON.parse(Buffer.from(state, 'base64').toString('utf-8')).redirect
+        } catch {
+            return null
+        }
+    }
+
     @Get('/callback/discord')
-    public async discordCallback(@Query('code') code: string, @Res() res: NextApiResponse<User>) {
+    public async discordCallback(
+        @Query('code') code: string,
+        @Query('state') state: string | null,
+        @Res() res: NextApiResponse<User>
+    ) {
         if (!code) throw new HttpException(400, 'No code provided', ['NO_CODE_PROVIDED'])
 
         let discordToken: DiscordOauth2.TokenRequestResult
@@ -326,19 +344,27 @@ class AuthHandler {
         // Set the session cookie
         setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
 
+        // Extract the redirect url from the state if it exits
+        const redirect = AuthHandler.parseState(state)
+        const redirectQuery = redirect ? `?redirect=${redirect}` : ''
+
         if (userCreated) {
             // Redirect to the signup completion page
-            res.setHeader('Refresh', '0; url=/signup/complete')
+            res.setHeader('Refresh', `0; url=/signup/complete${redirectQuery}`)
             res.end()
         } else {
             // Redirect to dashboard
-            res.setHeader('Refresh', '0; url=/dashboard')
+            res.setHeader('Refresh', `0; url=/dashboard${redirectQuery}`)
             res.end()
         }
     }
 
     @Get('/callback/google')
-    public async googleCallback(@Query('code') code: string, @Res() response: NextApiResponse<User>) {
+    public async googleCallback(
+        @Query('code') code: string,
+        @Query('state') state: string | null,
+        @Res() response: NextApiResponse<User>
+    ) {
         if (!code) throw new HttpException(400, 'No code provided', ['NO_CODE_PROVIDED'])
 
         // Get the access token from Google
@@ -373,15 +399,23 @@ class AuthHandler {
         // Set the session cookie
         setCookie(response, 'session', session.id, SESSION_COOKIE_OPTIONS)
 
+        // Extract the redirect url from the state if it exits
+        const redirect = AuthHandler.parseState(state)
+        const redirectQuery = redirect ? `?redirect=${redirect}` : ''
+
         // Redirect to dashboard
-        response.setHeader('Refresh', '0; url=/dashboard')
+        response.setHeader('Refresh', `0; url=/dashboard${redirectQuery}`)
         response.end()
     }
 
     // TODO make an enum for errors and include it in the query string of a login page redirect
 
     @Get('/callback/github')
-    public async githubCallback(@Query('code') code: string, @Res() res: NextApiResponse<User>) {
+    public async githubCallback(
+        @Query('code') code: string,
+        @Query('state') state: string | null,
+        @Res() res: NextApiResponse<User>
+    ) {
         if (!code) throw new HttpException(400, 'No code provided', ['NO_CODE_PROVIDED'])
 
         let octokit: OctokitInstance
@@ -445,13 +479,17 @@ class AuthHandler {
         // Set the session cookie
         setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
 
+        // Extract the redirect url from the state if it exits
+        const redirect = AuthHandler.parseState(state)
+        const redirectQuery = redirect ? `?redirect=${redirect}` : ''
+
         if (userCreated) {
             // Redirect to the signup completion page
-            res.setHeader('Refresh', '0; url=/signup/complete')
+            res.setHeader('Refresh', `0; url=/signup/complete${redirectQuery}`)
             res.end()
         } else {
             // Redirect to dashboard
-            res.setHeader('Refresh', '0; url=/dashboard')
+            res.setHeader('Refresh', `0; url=/dashboard${redirectQuery}`)
             res.end()
         }
     }
