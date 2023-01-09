@@ -10,14 +10,29 @@ export enum Role {
 export interface Organization {
     id: NanoID
     name: string
+    tag: string
     bio: string | null
     teamNumber: number | null
     avatar: string | null
-    members: {
-        id: NanoID
-        role: Role
-    }[]
+    members: OrganizationMember[]
     defaultRole: Role
+    invitations: OrganizationInvitation[]
     createdAt: Date
     updatedAt: Date
+}
+
+export interface OrganizationMember {
+    id: NanoID
+    role: Role
+}
+
+export interface OrganizationInvitation {
+    id: NanoID
+    organizationId: NanoID
+    inviterId: NanoID
+    userEmail: string
+    createdAt: Date
+    updatedAt: Date
+    expiresAt: Date
+    role: Role
 }

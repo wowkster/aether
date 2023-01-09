@@ -20,7 +20,7 @@ import * as style from '@dicebear/avatars-identicon-sprites'
 import { SignupRequest } from '../../pages/api/auth/[[...auth]]'
 import nanoid, { NanoID } from '../nanoid'
 
-import { Organization, Role } from '../../types/Organization'
+import { Organization, OrganizationInvitation, Role } from '../../types/Organization'
 import { Session } from '../../types/Session'
 import { DbUser, OAuthType, User } from '../../types/User'
 import { createHash } from 'crypto'
@@ -394,6 +394,7 @@ export default class Database {
             {
                 id,
                 name,
+                tag: `Team${teamNumber}`,
                 bio: null,
                 teamNumber,
                 avatar,
@@ -404,6 +405,7 @@ export default class Database {
                     },
                 ],
                 defaultRole: Role.VIEWER,
+                invitations: [],
                 createdAt: new Date(),
                 updatedAt: new Date(),
             },
@@ -411,6 +413,70 @@ export default class Database {
         )
 
         return organization
+    }
+
+    /**
+     * Get the members of an organization as User objects
+     * @param organization The organization to get the members of
+     */
+    static async getOrganizationMembers(organization: NanoID): Promise<User[]> {
+        const org = await this.getOrganizationFromId(organization)
+
+        return Promise.all(org.members.map(member => this.getUserFromId(member.id)))
+    }
+
+    /**
+     * Create an invitation for a user to join an organization
+     * @param organization The organization to invite the user to
+     * @param email The email of the user to invite
+     * @param role The role to give the user
+     * @param inviter The user who is inviting the user
+     * @param expires The date the invitation expires
+     * @returns The invitation
+     * @throws {Error} If the user is already a member of the organization
+     * @throws {Error} If the user is already invited to the organization
+     */
+    static async createOrganizationInvitation(
+        inviter: NanoID,
+        organization: NanoID,
+        email: string,
+        role: Role = Role.VIEWER
+    ): Promise<OrganizationInvitation> {
+        const org = await this.getOrganizationFromId(organization)
+
+        // Get all the members of the organization with their emails
+        const fullMembers = await this.getOrganizationMembers(organization)
+
+        // Check if the user is already a member of the organization
+        if (fullMembers.some(member => member.email === email))
+            throw new Error('User is already a member of the organization')
+
+        // Check if the user is already invited to the organization
+        if (org.invitations.some(invitation => invitation.userEmail === email))
+            throw new Error('User is already invited to the organization')
+
+        const invitation: OrganizationInvitation = {
+            id: await nanoid(),
+            organizationId: organization,
+            inviterId: inviter,
+            userEmail: email,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+            expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7), // 7 days from now
+            role,
+        }
+
+        await updateDocument<Organization>(
+            'organizations',
+            { id: organization },
+            {
+                $push: {
+                    invitations: invitation,
+                },
+            }
+        )
+
+        return invitation
     }
 }
 
