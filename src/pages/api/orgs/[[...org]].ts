@@ -1,3 +1,4 @@
+import { Organization } from './../../../types/Organization';
 import { IsAscii, IsEmail, IsInt, IsNotEmpty, MaxLength, MinLength } from 'class-validator'
 import { CookieSerializeOptions } from 'cookie'
 import type { NextApiResponse } from 'next'
@@ -49,8 +50,17 @@ const COOKIE_OPTIONS: CookieSerializeOptions = {
 class OrgsHandler {
     @Post('/')
     @RequireAuthSession()
-    createOrg(@UserSession() user: User, @Body(ValidationPipe) { teamNumber, name }: CreateOrgRequest) {
-        return Database.createOrganization(user, { teamNumber, name })
+    async createOrg(
+        @UserSession() user: User,
+        @Body(ValidationPipe) { teamNumber, name }: CreateOrgRequest,
+        @Res() res: NextApiResponse<Organization>
+    ) {
+        const org = await Database.createOrganization(user, { teamNumber, name })
+
+        // Set the selected organization cookie
+        setCookie(res, 'organization', org.id, COOKIE_OPTIONS)
+
+        return org
     }
 
     @Get('/:id')
@@ -140,7 +150,7 @@ class OrgsHandler {
         await Database.addUserToOrganization(organizationId, user.id, invitation.role)
 
         // Set the selected organization cookie
-        setCookie(res, 'organization', org, COOKIE_OPTIONS)
+        setCookie(res, 'organization', org.id, COOKIE_OPTIONS)
 
         // Redirect to dashboard
         res.setHeader('Refresh', `0; url=/dashboard/orgs/${org.id}`)
