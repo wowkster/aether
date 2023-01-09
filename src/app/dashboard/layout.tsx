@@ -1,21 +1,39 @@
 import Image from 'next/image'
 import Link from 'next/link'
-import React from 'react'
 
 import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from 'react-icons/tb'
 
 import Nav from './Nav'
 
-import logo from '../../../public/img/logo-beta.svg'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 import logoDark from '../../../public/img/logo-beta-dark.svg'
-import styles from './layout.module.scss'
+import logo from '../../../public/img/logo-beta.svg'
+import Database from '../../util/database/mongo'
 import { combine } from '../../util/styles'
+import styles from './layout.module.scss'
 
-interface Props {
-    children: React.ReactNode
+const getSession = async () => {
+    const nextCookies = cookies()
+    const session = nextCookies.get('session')
+
+    const user = await Database.getUserFromSession(session?.value)
+
+    console.log('Session User (Dashboard):', user)
+
+    // If there is a user session, redirect away from the sign up page
+    if (!user) redirect('/login?redirect=/dashboard')
+
+    return { user }
 }
 
-export default function Layout({ children }: Props) {
+export default async function Layout(props) {
+    const { user } = await getSession()
+
+    const organizations = await Database.getUserOrganizations(user.id)
+
+    console.log('Organizations:', organizations)
+
     return (
         <>
             <input
@@ -40,7 +58,7 @@ export default function Layout({ children }: Props) {
                     </label>
                 </aside>
                 <div className={styles.page_content} id='page-content'>
-                    <main>{children}</main>
+                    <main>{props.children}</main>
                     <footer className={styles.footer}>&copy; 2022 Wowkster. All rights reserved.</footer>
                 </div>
                 <aside className={styles.side_bar}>
