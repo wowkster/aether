@@ -1,4 +1,5 @@
 import { IsAscii, IsEmail, IsInt, IsNotEmpty, MaxLength, MinLength } from 'class-validator'
+import { CookieSerializeOptions } from 'cookie'
 import type { NextApiResponse } from 'next'
 import {
     BadRequestException,
@@ -16,6 +17,7 @@ import {
 import { Role } from '../../../types/Organization'
 import type { User } from '../../../types/User'
 import { GetAuthSession, RequireAuthSession, UserSession } from '../../../util/auth'
+import { setCookie } from '../../../util/cookie'
 import Database from '../../../util/database/mongo'
 import { sendInvitationEmail } from '../../../util/email'
 
@@ -35,6 +37,13 @@ class InviteMemberRequest {
     @IsNotEmpty()
     @IsEmail()
     email!: string
+}
+
+const COOKIE_OPTIONS: CookieSerializeOptions = {
+    httpOnly: true,
+    sameSite: 'lax',
+    secure: process.env.NODE_ENV === 'production',
+    path: '/',
 }
 
 class OrgsHandler {
@@ -130,8 +139,12 @@ class OrgsHandler {
         // Add user to organization
         await Database.addUserToOrganization(organizationId, user.id, invitation.role)
 
+        // Set the selected organization cookie
+        setCookie(res, 'organization', org, COOKIE_OPTIONS)
+
         // Redirect to dashboard
-        return res.redirect(`/dashboard?organization=${organizationId}`)
+        res.setHeader('Refresh', `0; url=/dashboard/orgs/${org.id}`)
+        res.end()
     }
 }
 
