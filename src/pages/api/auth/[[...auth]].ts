@@ -143,6 +143,12 @@ class AuthHandler {
             maxAge: 1000 * 60 * 60 * 24 * (Math.floor(Math.random() * +21) + 7), // Random value between 7-30 days
         })
 
+        // Set the selected organization cookie
+        const orgs = await Database.getUserOrganizations(user.id)
+        if (orgs && orgs.length > 0) {
+            setCookie(res, 'organization', orgs[0].id, SESSION_COOKIE_OPTIONS)
+        }
+
         return user
     }
 
@@ -169,6 +175,12 @@ class AuthHandler {
 
         // Set the session cookie
         setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
+
+        // Set the selected organization cookie
+        const orgs = await Database.getUserOrganizations(user.id)
+        if (orgs && orgs.length > 0) {
+            setCookie(res, 'organization', orgs[0].id, SESSION_COOKIE_OPTIONS)
+        }
 
         return user
     }
@@ -231,6 +243,12 @@ class AuthHandler {
 
         // Unset the session cookie
         setCookie(res, 'session', null, {
+            maxAge: -1,
+            ...SESSION_COOKIE_OPTIONS,
+        })
+
+        // Unset the organization cookie
+        setCookie(res, 'organization', null, {
             maxAge: -1,
             ...SESSION_COOKIE_OPTIONS,
         })
@@ -344,6 +362,12 @@ class AuthHandler {
         // Set the session cookie
         setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
 
+        // Set the selected organization cookie
+        const orgs = await Database.getUserOrganizations(user.id)
+        if (orgs && orgs.length > 0) {
+            setCookie(res, 'organization', orgs[0].id, SESSION_COOKIE_OPTIONS)
+        }
+
         // Extract the redirect url from the state if it exits
         const redirect = AuthHandler.parseState(state)
         const redirectQuery = redirect ? `?redirect=${redirect}` : ''
@@ -363,7 +387,7 @@ class AuthHandler {
     public async googleCallback(
         @Query('code') code: string,
         @Query('state') state: string | null,
-        @Res() response: NextApiResponse<User>
+        @Res() res: NextApiResponse<User>
     ) {
         if (!code) throw new HttpException(400, 'No code provided', ['NO_CODE_PROVIDED'])
 
@@ -397,15 +421,21 @@ class AuthHandler {
         const session = await Database.createSessionFromUser(user)
 
         // Set the session cookie
-        setCookie(response, 'session', session.id, SESSION_COOKIE_OPTIONS)
+        setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
+
+        // Set the selected organization cookie
+        const orgs = await Database.getUserOrganizations(user.id)
+        if (orgs && orgs.length > 0) {
+            setCookie(res, 'organization', orgs[0].id, SESSION_COOKIE_OPTIONS)
+        }
 
         // Extract the redirect url from the state if it exits
         const redirect = AuthHandler.parseState(state)
         const redirectQuery = redirect ? `?redirect=${redirect}` : ''
 
         // Redirect to dashboard
-        response.setHeader('Refresh', `0; url=/dashboard${redirectQuery}`)
-        response.end()
+        res.setHeader('Refresh', `0; url=/dashboard${redirectQuery}`)
+        res.end()
     }
 
     // TODO make an enum for errors and include it in the query string of a login page redirect
@@ -478,6 +508,12 @@ class AuthHandler {
 
         // Set the session cookie
         setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
+
+        // Set the selected organization cookie
+        const orgs = await Database.getUserOrganizations(user.id)
+        if (orgs && orgs.length > 0) {
+            setCookie(res, 'organization', orgs[0].id, SESSION_COOKIE_OPTIONS)
+        }
 
         // Extract the redirect url from the state if it exits
         const redirect = AuthHandler.parseState(state)
