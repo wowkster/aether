@@ -1,18 +1,18 @@
-'use client'
-
 import Link from 'next/link'
 import React, { FC } from 'react'
 import { IconType } from 'react-icons/lib'
-import { usePathname } from 'next/navigation'
 
 import { AiOutlineAudit, AiOutlineSchedule } from 'react-icons/ai'
-import { FaClipboardList, FaUsers, FaUsersCog, FaCog } from 'react-icons/fa'
+import { FaClipboardList, FaCog, FaUsers, FaUsersCog } from 'react-icons/fa'
 import { GrGamepad } from 'react-icons/gr'
-import { MdAssignment, MdBusiness, MdChecklist, MdLeaderboard, MdSchedule, MdLogout } from 'react-icons/md'
+import { MdAssignment, MdBusiness, MdChecklist, MdLeaderboard, MdLogout, MdSchedule } from 'react-icons/md'
 import { RiCalendarEventLine, RiLayoutGridFill } from 'react-icons/ri'
 
-import styles from './Nav.module.scss'
+import { Organization } from '../../types/Organization'
 import { combine } from '../../util/styles'
+import { serverUseRequestUrl } from '../../util/url'
+import styles from './Nav.module.scss'
+import OrganizationSelector from './OrganizationSelector'
 
 const NAV_DATA = [
     {
@@ -52,11 +52,17 @@ const NAV_DATA = [
     },
 ]
 
-export default function Nav() {
-    const pathname = usePathname()
+export interface NavProps {
+    organizations: Organization[]
+    selectedOrganization: Organization | null
+}
+
+const Nav = async ({ organizations, selectedOrganization }: NavProps) => {
+    const { pathname } = serverUseRequestUrl()
 
     return (
         <nav className={styles.nav}>
+            <OrganizationSelector {...{organizations, selectedOrganization}} />
             {NAV_DATA.map(({ title, links }) => (
                 <NavSection title={title} key={title}>
                     {links.map(({ href, icon, text }) => (
@@ -101,3 +107,5 @@ const NavLink: FC<{
         </Link>
     )
 }
+
+export default Nav
