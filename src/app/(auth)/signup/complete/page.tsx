@@ -39,7 +39,7 @@ const SignupCompletion = async props => {
             <div className={styles.text}>
                 <h1 className={styles.title}>Sign Up Completion</h1>
             </div>
-            <SignupCompletionForm redirect={props.searchParams.redirect}/>
+            <SignupCompletionForm redirect={props.searchParams.redirect} />
         </div>
     )
 }
