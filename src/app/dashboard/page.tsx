@@ -1,17 +1,14 @@
-import OrgTester from './OrgTester'
+import { redirect } from 'next/navigation'
+import { getSession } from '../../util/session'
 
-export default function Dashboard(props) {
-    const { user, organization } = props.params
+export default async function Dashboard() {
+    const { user, organizations, selectedOrganization } = await getSession()
 
-    console.log('Dashboard Props:', props)
+    // If the user is a part of an organization, redirect to that organization
+    if (selectedOrganization) {
+        redirect(`/dashboard/orgs/${selectedOrganization}`)
+    }
 
-    return (
-        <>
-            <h1>Dashboard</h1>
-            <pre>{JSON.stringify(user, null, 4)}</pre>
-            <pre>{JSON.stringify(organization, null, 4)}</pre>
-
-            <OrgTester />
-        </>
-    )
+    // Render the screen that accepts a join code
+    return <>You are not a part of an organization!</>
 }
