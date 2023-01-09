@@ -111,7 +111,7 @@ class OrgsHandler {
 
         // If the user session does not exist, redirect to signup page
         if (!user) {
-            return res.redirect(`/signup?redirect=/api/invites/${invitationId}`)
+            return res.redirect(`/signup?redirect=/api/orgs/${organizationId}/invites/${invitationId}`)
         }
 
         // Make sure that the user's email matches that of the invite
