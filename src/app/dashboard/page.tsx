@@ -6,7 +6,7 @@ export default async function Dashboard() {
 
     // If the user is a part of an organization, redirect to that organization
     if (selectedOrganization) {
-        redirect(`/dashboard/orgs/${selectedOrganization}`)
+        redirect(`/dashboard/orgs/${selectedOrganization.id}`)
     }
 
     // Render the screen that accepts a join code
