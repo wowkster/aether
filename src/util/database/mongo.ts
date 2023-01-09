@@ -87,7 +87,7 @@ export default class Database {
     }
 
     static getUserOrganizations(id: NanoID): Promise<Organization[]> {
-        return getDocuments<Organization>('organizations', { members: id })
+        return getDocuments<Organization>('organizations', { 'members.id': id })
     }
 
     /**
