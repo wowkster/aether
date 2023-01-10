@@ -2,7 +2,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import Database from './database/mongo'
 
-export const getSession = async () => {
+export const getSession = async (params?: any) => {
     const nextCookies = cookies()
     const session = nextCookies.get('session')
 
@@ -13,7 +13,7 @@ export const getSession = async () => {
 
     const organizations = await Database.getUserOrganizations(user.id)
 
-    const org = nextCookies.get('organization')
+    const org = params?.organization ?? nextCookies.get('organization')
     // Select the organization from the cookie, or the first organization in the list
     const selectedOrganization = org ? await Database.getOrganizationFromId(org?.value) : organizations[0] ?? null
 

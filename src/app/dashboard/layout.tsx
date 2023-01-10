@@ -13,7 +13,7 @@ import { getSession } from '../../util/session'
 import RightSideBar from './RightSideBar'
 
 export default async function Layout(props) {
-    const session = await getSession()
+    const session = await getSession(props.params)
 
     return (
         <>
