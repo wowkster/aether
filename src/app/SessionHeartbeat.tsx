@@ -12,7 +12,7 @@ const SessionHeartbeat = () => {
         })
     }, 1000 * 60 * 5)
 
-    return <div style={{ display: 'none' }}></div>
+    return <></>
 }
 
 export default SessionHeartbeat
