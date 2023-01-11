@@ -16,8 +16,8 @@ $light: (
     background-quaternary: #c4c4c4,
 
     text-primary: #333333,
-    text-secondary: #9198A5,
-    text-tertiary: #c0c0c0,
+    text-secondary: hsl(218, 10%, 58%),
+    text-tertiary: hsl(220, 10%, 68%),
 );
 
 $theme-light: map-merge($colors, $light);
