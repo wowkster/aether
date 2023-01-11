@@ -6,7 +6,6 @@
     justify-content: center;
     gap: 0.25rem;
 
-    color: var(--theme-text-secondary);
     cursor: pointer;
     user-select: none;
 
@@ -16,10 +15,16 @@
         border-radius: 50%;
         overflow: hidden;
     }
+
+    color: var(--theme-text-tertiary);
+
+    &:hover {
+        color: var(--theme-text-secondary);
+    }
 }
 
 .arrow {
-    transition: rotate 0.3s ease;
+    transition: rotate 0.3s ease, color 0.3s ease;
 }
 
 .dropdown {
@@ -40,7 +45,6 @@
 
         background-color: var(--theme-background-secondary-light);
         border: 2px solid var(--theme-background-secondary);
-        color: var(--theme-text-secondary);
 
         border-radius: 1rem;
 
@@ -53,8 +57,19 @@
             gap: 1rem;
             padding: 0.75rem;
 
+            color: var(--theme-text-tertiary);
+            transition: color 0.3s ease;
+
+            &:hover {
+                color: var(--theme-text-secondary);
+            }
+
             &:not(:last-child) {
                 border-bottom: 1px solid var(--theme-background-secondary);
+            }
+
+            svg {
+                stroke-width: 2.5px;
             }
         }
     }
