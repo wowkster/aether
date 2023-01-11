@@ -57,12 +57,12 @@ export interface NavProps {
     selectedOrganization: Organization | null
 }
 
-const Nav = async ({ organizations, selectedOrganization }: NavProps) => {
+const Nav = ({ organizations, selectedOrganization }: NavProps) => {
     const { pathname } = serverUseRequestUrl()
 
     return (
         <nav className={styles.nav}>
-            <OrganizationSelector {...{organizations, selectedOrganization}} />
+            <OrganizationSelector {...{ organizations, selectedOrganization }} />
             {NAV_DATA.map(({ title, links }) => (
                 <NavSection title={title} key={title}>
                     {links.map(({ href, icon, text }) => (
