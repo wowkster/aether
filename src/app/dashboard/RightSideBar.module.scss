@@ -20,9 +20,26 @@
     .icon {
         width: 2rem;
         height: 2rem;
-        color: var(--theme-text-secondary);
-        path {
-            stroke: var(--theme-text-secondary);
+
+        svg {
+            color: var(--theme-text-tertiary);
+            stroke: var(--theme-text-tertiary);
+
+            transition: color 0.3s ease, stroke 0.3s ease;
+
+            path {
+                stroke: var(--theme-text-tertiary);
+                transition: stroke 0.3s ease;
+            }
+
+            &:hover {
+                color: var(--theme-text-secondary);
+                stroke: var(--theme-text-secondary);
+
+                path {
+                    stroke: var(--theme-text-secondary);
+                }
+            }
         }
     }
 }
