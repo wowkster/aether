@@ -63,21 +63,22 @@ const Nav = ({ organizations, selectedOrganization }: NavProps) => {
     return (
         <nav className={styles.nav}>
             <OrganizationSelector {...{ organizations, selectedOrganization }} />
-            {NAV_DATA.map(({ title, links }) => (
-                <NavSection title={title} key={title}>
-                    {links.map(({ href, icon, text }) => (
-                        <NavLink
-                            href={href}
-                            icon={icon}
-                            key={text}
-                            active={
-                                href === pathname || (pathname === '/dashboard' && href === '/dashboard/drive_team')
-                            }>
-                            {text}
-                        </NavLink>
-                    ))}
-                </NavSection>
-            ))}
+            {selectedOrganization &&
+                NAV_DATA.map(({ title, links }) => (
+                    <NavSection title={title} key={title}>
+                        {links.map(({ href, icon, text }) => (
+                            <NavLink
+                                href={href}
+                                icon={icon}
+                                key={text}
+                                active={
+                                    href === pathname || (pathname === '/dashboard' && href === '/dashboard/drive_team')
+                                }>
+                                {text}
+                            </NavLink>
+                        ))}
+                    </NavSection>
+                ))}
         </nav>
     )
 }
