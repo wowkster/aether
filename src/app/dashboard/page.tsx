@@ -1,5 +1,6 @@
 import { redirect } from 'next/navigation'
 import { getSession } from '../../util/session'
+import NoOrganization from './(no_organization)/NoOrganization'
 
 export default async function Dashboard() {
     const { user, organizations, selectedOrganization } = await getSession()
@@ -10,5 +11,5 @@ export default async function Dashboard() {
     }
 
     // Render the screen that accepts a join code
-    return <>You are not a part of an organization!</>
+    return <NoOrganization />
 }
