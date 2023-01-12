@@ -1,0 +1,32 @@
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+
+    width: 32rem;
+    height: 100%;
+
+    margin: 0 auto;
+}
+
+.heading {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.subheading {
+    color: var(--theme-text-secondary);
+    font-weight: 500;
+}
+
+.small {
+    font-size: 0.75rem;
+
+    color: var(--theme-text-secondary);
+
+    a {
+        text-decoration: underline;
+        color: var(--theme-blue);
+    }
+}

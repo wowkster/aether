@@ -1,0 +1,30 @@
+.wrapper {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    width: 100%;
+
+    input {
+        padding: 1rem;
+        border-radius: 0.5rem;
+
+        outline: none;
+        border: none;
+    }
+
+    input[type='text'] {
+        width: 100%;
+    }
+
+    input[type='submit'] {
+        padding: 1rem 1.5rem;
+
+        background-color: var(--theme-blue);
+        color: white;
+
+        font-weight: 600;
+
+        cursor: pointer;
+    }
+}
