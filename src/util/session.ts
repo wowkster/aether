@@ -17,5 +17,16 @@ export const getSession = async (params?: any) => {
     // Select the organization from the cookie, or the first organization in the list
     const selectedOrganization = org ? await Database.getOrganizationFromId(org?.value) : organizations[0] ?? null
 
-    return { user, organizations, selectedOrganization }
+    // User's cookie represents an organization that they are not a part of or does not exist
+    if (org && !selectedOrganization?.members.some(m => m.id === user.id)) {
+        // Redirect the user to api route which will reset their `organization`
+        // cookie and redirect them to the /dashboard route
+        redirect(`/api/orgs/reset_org_cookie`)
+    }
+
+    return {
+        user,
+        organizations,
+        selectedOrganization,
+    }
 }
