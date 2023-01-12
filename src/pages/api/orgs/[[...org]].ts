@@ -165,7 +165,7 @@ class OrgsHandler {
 
         // Make sure that the user is not already a member of the organization
         if (org.members.find(member => member.id === user.id)) {
-            return res.redirect(`/dashboard?organization=${organizationId}`)
+            return res.redirect(`/dashboard/orgs/${organizationId}`)
         }
 
         // Add user to organization
