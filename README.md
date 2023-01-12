@@ -1,8 +1,6 @@
 # Team 303 Aether
 
-<p align="left"> 
-  <a href="https://wakatime.com/badge/github/Team303/aether"><img src="https://wakatime.com/badge/github/Team303/aether.svg" alt="wakatime"></a>
-</p>
+ [![wakatime](https://wakatime.com/badge/github/Team303/aether.svg)](https://wakatime.com/badge/github/Team303/aether)
 
 Aether is a next generation scouting app built with modern technology, and with several key principles in mind. We value aesthetics, ease of use, flexibility, and most importantly sustainability. The aim of this project is to make the best scouting app FRC has ever seen, and to make a scouting app that is accessible to all teams.
 
