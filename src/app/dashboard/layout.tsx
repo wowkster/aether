@@ -40,8 +40,10 @@ export default async function Layout(props) {
                     </label>
                 </aside>
                 <div className={styles.page_content} id='page-content'>
-                    <main>{props.children}</main>
-                    <footer className={styles.footer}>&copy; 2022 Wowkster. All rights reserved.</footer>
+                    <div className={styles.page_content_wrapper}>
+                        <main className={styles.main}>{props.children}</main>
+                        <footer className={styles.footer}>&copy; 2022 Wowkster. All rights reserved.</footer>
+                    </div>
                 </div>
                 <aside className={styles.side_bar}>
                     {/* @ts-expect-error Server Component */}

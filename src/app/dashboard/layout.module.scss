@@ -119,14 +119,34 @@
     position: relative;
     z-index: -10;
 
-    min-height: 100vh;
+    height: 100vh;
     width: 100%;
+
+    overflow-y: auto;
 
     padding: 1.5rem;
     padding-top: 3rem;
     margin: 0 20rem;
 
     background-color: var(--theme-background-secondary);
+}
+
+.page_content_wrapper {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: max-content;
+
+    flex: 1;
+}
+
+.main {
+    display: flex;
+    flex-direction: column;
+
+    width: 100%;
+    height: 100%;
 }
 
 .footer {
