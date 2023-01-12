@@ -1,4 +1,4 @@
-import { Organization } from './../../../types/Organization';
+import { Organization } from './../../../types/Organization'
 import { IsAscii, IsEmail, IsInt, IsNotEmpty, MaxLength, MinLength } from 'class-validator'
 import { CookieSerializeOptions } from 'cookie'
 import type { NextApiResponse } from 'next'
@@ -61,6 +61,28 @@ class OrgsHandler {
         setCookie(res, 'organization', org.id, COOKIE_OPTIONS)
 
         return org
+    }
+
+    @HttpCode(200)
+    @Get('/reset_org_cookie')
+    @GetAuthSession()
+    async resetOrgCookie(@UserSession() user: User | null, @Res() res: NextApiResponse<unknown>) {
+        const orgs = await Database.getUserOrganizations(user?.id)
+
+        if (!orgs?.[0]) {
+            // Unset the organization cookie
+            setCookie(res, 'organization', null, {
+                maxAge: -1,
+                ...COOKIE_OPTIONS,
+            })
+        } else {
+            // Set the selected organization cookie
+            setCookie(res, 'organization', orgs[0], COOKIE_OPTIONS)
+        }
+
+        // Redirect to dashboard
+        res.setHeader('Refresh', `0; url=/dashboard`)
+        res.end()
     }
 
     @Get('/:id')
