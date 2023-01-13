@@ -78,10 +78,8 @@ export function getPalette(img, colorCount = 10, quality = 10) {
 
     return new Promise((resolve, reject) => {
         loadImg(img)
-            .then(imgData => {
-                // @ts-ignore
+            .then((imgData: any) => {
                 const pixelCount = imgData.shape[0] * imgData.shape[1]
-                // @ts-ignore
                 const pixelArray = createPixelArray(imgData.data, pixelCount, options.quality)
 
                 const cmap = quantize(pixelArray, options.colorCount)
