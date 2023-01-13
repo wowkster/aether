@@ -82,7 +82,7 @@ const NavSection: FC<{
 }> = ({ title, children }) => {
     return (
         <div className={styles.nav_section}>
-            <h3 className={styles.nav_section_title}>{title}</h3>
+            <label className={styles.nav_section_title}>{title}</label>
             <div className={styles.nav_section_links}>{children}</div>
         </div>
     )
