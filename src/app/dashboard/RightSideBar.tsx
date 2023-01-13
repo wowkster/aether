@@ -20,7 +20,7 @@ export interface RightSideBarProps {
     selectedOrganization: Organization
 }
 
-export default async function RightSideBar({ user, organizations, selectedOrganization }: RightSideBarProps) {
+export default async function RightSideBar({ user /*, organizations, selectedOrganization */ }: RightSideBarProps) {
     const avatarUrl = `https://aether.localhost:9000/aether/avatars/${user.id}/${user.avatar}.webp`
 
     const { data: imgBuffer } = await axios.get(avatarUrl, {
