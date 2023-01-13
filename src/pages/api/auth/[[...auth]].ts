@@ -115,6 +115,7 @@ const SESSION_COOKIE_OPTIONS: CookieSerializeOptions = {
     sameSite: 'lax',
     secure: process.env.NODE_ENV === 'production',
     path: '/',
+    maxAge: 1000 * 60 * 60 * 24 * 30, // One month
 }
 
 class AuthHandler {
@@ -138,10 +139,7 @@ class AuthHandler {
         const session = await Database.createSessionFromUser(user)
 
         // Set the session cookie
-        setCookie(res, 'session', session.id, {
-            ...SESSION_COOKIE_OPTIONS,
-            maxAge: 1000 * 60 * 60 * 24 * (Math.floor(Math.random() * +21) + 7), // Random value between 7-30 days
-        })
+        setCookie(res, 'session', session.id, SESSION_COOKIE_OPTIONS)
 
         // Set the selected organization cookie
         const orgs = await Database.getUserOrganizations(user.id)
@@ -243,14 +241,14 @@ class AuthHandler {
 
         // Unset the session cookie
         setCookie(res, 'session', null, {
-            maxAge: -1,
             ...SESSION_COOKIE_OPTIONS,
+            maxAge: -1,
         })
 
         // Unset the organization cookie
         setCookie(res, 'organization', null, {
-            maxAge: -1,
             ...SESSION_COOKIE_OPTIONS,
+            maxAge: -1,
         })
 
         // Log the user being logged out
