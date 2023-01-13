@@ -71,7 +71,7 @@ const SignupForm: FC<{
 
     // If successfully signed up, redirect to the dashboard
     useEffect(() => {
-        if (data) router.push(`/dashboard${redirect ? `?redirect=${redirect}` : ''}`)
+        if (data) router.push(redirect ?? '/dashboard')
     }, [data, router, redirect])
 
     // If a conflict error is thrown, redirect to the dashboard anyway
