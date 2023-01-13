@@ -1,27 +1,40 @@
-.none {
+.wrapper {
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.25rem;
+}
 
-    &_label {
-        text-transform: uppercase;
+.label {
+    text-transform: uppercase;
 
-        font-weight: 700;
-    }
+    font-weight: 600;
+    font-size: 1.1rem;
+}
 
-    &_select {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+.select {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.75rem;
-        border: 2.5px solid var(--theme-background-tertiary);
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.75rem;
 
+    border: 2.5px solid var(--theme-background-tertiary);
+    font-weight: 600;
+
+    &_fake {
         color: var(--theme-background-tertiary);
-        
-        font-weight: 400;
 
         cursor: not-allowed;
+    }
+
+    &_real {
+        cursor: pointer;
+
+        &_avatar {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
     }
 }
