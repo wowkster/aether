@@ -9,12 +9,16 @@ const nextConfig = {
         includePaths: [path.join(__dirname, 'src', 'styles')],
     },
     webpack(options) {
-        return {...options,
-            optimization: {
-                moduleIds: 'deterministic',
-            }}
+        return process.env.NODE_ENV === 'production'
+            ? options
+            : {
+                  ...options,
+                  optimization: {
+                      moduleIds: 'deterministic',
+                  },
+              }
     },
-    swcMinify: false,
+    swcMinify: process.env.NODE_ENV === 'production',
     images: {
         domains: ['aether.localhost'],
     },
@@ -23,5 +27,5 @@ const nextConfig = {
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
     enabled: process.env.ANALYZE === 'true',
 })
-module.exports = withBundleAnalyzer(nextConfig)
 
+module.exports = withBundleAnalyzer(nextConfig)
