@@ -58,7 +58,7 @@ export default function RightSidebarProfile({ user }) {
                     <Link href={'/dashboard/profile'}>
                         <FiUser size={20} /> My Profile
                     </Link>
-                    <Link href={'/api/auth/logout'}>
+                    <Link href={'/api/auth/logout'} prefetch={false}>
                         <FiLogOut size={20} /> Log Out
                     </Link>
                 </div>

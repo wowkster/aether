@@ -61,6 +61,7 @@ export default async function NavBar() {
                             </Link>
                             <Link
                                 href={'/api/auth/logout'}
+                                prefetch={false}
                                 className={combine(styles.nav__button, styles.nav__button__danger)}>
                                 Log Out
                             </Link>
