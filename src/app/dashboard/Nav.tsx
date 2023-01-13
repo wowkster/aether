@@ -42,14 +42,7 @@ const NAV_DATA = [
             { href: '/dashboard/scouting_audit', icon: AiOutlineAudit, text: 'Scouting Audit' },
             { href: '/dashboard/organization_settings', icon: MdBusiness, text: 'Organization Settings' },
         ],
-    },
-    {
-        title: 'Personal',
-        links: [
-            { href: '/dashboard/settings', icon: FaCog, text: 'Settings' },
-            { href: '/api/auth/logout', icon: MdLogout, text: 'Log Out' },
-        ],
-    },
+    }
 ]
 
 export interface NavProps {
