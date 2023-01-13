@@ -1,0 +1,53 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+
+    &_fieldset {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 0.5rem;
+    }
+
+    label {
+        text-transform: uppercase;
+        font-weight: 700;
+    }
+
+    input, button {
+        padding: 1rem;
+        border-radius: 0.5rem;
+
+        border: none;
+    }
+
+    input[type='text'],
+    input[type='number'] {
+        border: 2px solid var(--theme-background-tertiary);
+
+        font-weight: 400;
+
+        &::placeholder {
+            color: var(--theme-background-quaternary);
+        }
+    }
+
+    button[type='submit'] {
+        background-color: var(--theme-blue);
+        color: white;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        &:disabled {
+            background-color: var(--theme-background-quaternary);
+        }
+    }
+
+    input[required] ~ label::after {
+        content: '*';
+        margin-left: 4px;
+        color: var(--theme-red-darker);
+    }
+}
