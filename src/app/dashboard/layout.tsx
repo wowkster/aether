@@ -29,7 +29,6 @@ export default async function Layout(props) {
                         <Image src={logo} alt={'Aether logo'} className={styles.logo} />
                         <Image src={logoDark} alt={'Aether logo'} className={combine(styles.logo, styles.logo_dark)} />
                     </Link>
-                    {/* @ts-expect-error Server Component */}
                     <Nav {...session} />
                     {/* One label for when its open, and one for when its closed (conditionally styled instead of using client js) */}
                     <label className={combine(styles.collapse, styles.collapse_close)} htmlFor='left-sidebar-input'>
