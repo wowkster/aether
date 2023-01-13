@@ -368,15 +368,14 @@ class AuthHandler {
 
         // Extract the redirect url from the state if it exits
         const redirect = AuthHandler.parseState(state)
-        const redirectQuery = redirect ? `?redirect=${redirect}` : ''
 
         if (userCreated) {
             // Redirect to the signup completion page
-            res.setHeader('Refresh', `0; url=/signup/complete${redirectQuery}`)
+            res.setHeader('Refresh', `0; url=/signup/complete${redirect ? `?redirect=${redirect}` : ''}`)
             res.end()
         } else {
             // Redirect to dashboard
-            res.setHeader('Refresh', `0; url=/dashboard${redirectQuery}`)
+            res.setHeader('Refresh', `0; url=${redirect ?? '/dashboard'}`)
             res.end()
         }
     }
@@ -429,10 +428,9 @@ class AuthHandler {
 
         // Extract the redirect url from the state if it exits
         const redirect = AuthHandler.parseState(state)
-        const redirectQuery = redirect ? `?redirect=${redirect}` : ''
 
         // Redirect to dashboard
-        res.setHeader('Refresh', `0; url=/dashboard${redirectQuery}`)
+        res.setHeader('Refresh', `0; url=${redirect ?? '/dashboard'}`)
         res.end()
     }
 
@@ -515,15 +513,14 @@ class AuthHandler {
 
         // Extract the redirect url from the state if it exits
         const redirect = AuthHandler.parseState(state)
-        const redirectQuery = redirect ? `?redirect=${redirect}` : ''
 
         if (userCreated) {
             // Redirect to the signup completion page
-            res.setHeader('Refresh', `0; url=/signup/complete${redirectQuery}`)
+            res.setHeader('Refresh', `0; url=/signup/complete${redirect ? `?redirect=${redirect}` : ''}`)
             res.end()
         } else {
             // Redirect to dashboard
-            res.setHeader('Refresh', `0; url=/dashboard${redirectQuery}`)
+            res.setHeader('Refresh', `0; url=${redirect ?? '/dashboard'}`)
             res.end()
         }
     }
