@@ -69,7 +69,7 @@ Data Viewing:
         ☐ UI to view all the teams at the current event
         ☐ UI to view an individual team's stats (and all of it's matches)
         ☐ API routes to get a list of the teams at an event
-        ☐ APi routes to get the stats for a team at an event
+        ☐ API routes to get the stats for a team at an event
 
 Scouting:
     Event Attendence (Experimental):
