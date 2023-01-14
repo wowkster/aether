@@ -1,0 +1,37 @@
+.button {
+    display: flex;
+    align-items: center;
+    gap: 0.75em;
+    padding: 0.5em;
+
+    border: solid 3px transparent;
+    border-radius: 0.5em;
+
+    font-weight: 600;
+    font-size: 0.975rem;
+
+    cursor: pointer;
+}
+
+.solid {
+    background-color: var(--theme-blue);
+    color: white;
+
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: var(--theme-blue-dark);
+    }
+}
+
+.outlined {
+    color: var(--theme-blue);
+    border-color: var(--theme-blue);
+
+    transition: border-color 0.3s ease, color 0.3s ease;
+
+    &:hover {
+        color: var(--theme-blue-dark);
+        border-color: var(--theme-blue-dark);
+    }
+}
