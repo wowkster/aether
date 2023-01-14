@@ -1,5 +1,162 @@
-ideas:
-    ✔ main system where people login with oauth or email, everyeone has their own account @done(22-12-02 07:22)
-        ☐ and get invited to the org or get a join code
-    ☐ separate system where scouters can enter an event code and scout anonymously for different matches
-    ☐ https://www.npmjs.com/package/password-validator
+General:
+    ☐ Polish up the UI
+    Refactor UI into reusable components (reduce code duplication in styles):
+        ☐ Text componet
+        ☐ Link component
+        ☐ Form component
+            ☐ FieldGroup component
+            ☐ Text Input
+            ☐ Button Input
+        ☐ FlexContainer component
+    Right sidebar features:
+        ☐ Modal for changing user avatar
+            ☐ API routes for editing user avatar
+        ☐ User settings page
+            ☐ API routes for editing user settings/preferences
+            ☐ UI for managing user settings
+        ☐ Notifications dropdown/modal
+            ☐ Implement notification system (TBD on details)
+        ☐ Announcements list
+        ☐ Upcoming assignments list
+    ☐ Responsive design @high
+    ☐ Anonymous scouting with a code??
+
+Authentication:
+    Signup:
+        ✔ UI for user signup
+        ✔ API route for email/password signup
+        ✔ UI for signup completion (If using email password, or name can not be retrieved from OAuth)
+        ☐ Validate that password is strong (https://www.npmjs.com/package/password-validator) @low
+    Login:
+        ✔ UI for user login
+        ✔ API route for email/password login
+    Signup/Login:
+        API routes for OAuth Login/Signup:
+            ✔ Discord
+            ✔ Google
+            ✔ GitHub
+    Logout:
+        ✔ API routes for logout (Delete session cookies and redirect home)
+    Session Management:
+        ✔ API route for refreshing session cookie
+        ✔ React component to periodically refresh session cookie while the page is active
+    Security:
+        ☐ CSRF cookie to prevent against malicious cross site requests @high
+
+Data Viewing:
+    Drive Team Dashboard:
+        ☐ UI to show the next match that our team is playing in
+            ☐ Match overview (teams, colors, match number, times, etc)
+            ☐ Spider graph to show the stats of each alliance
+        ☐ API routes to get the data for a match
+        ☐ Api routes to get the stats for a team at an event
+    Current Rankings:
+        ☐ UI to show the current rankings of teams in the current event
+            ☐ Sortable by ranking points (from TBA/collected data) or our arbitrary metrics
+        ☐ API routes to get the current rankings of all teams
+    Matches:
+        Can be displayed in the pit (fullscreen) to show upcoming matches (highlights our team automatically)
+        ☐ UI to view the upcoming matches (from TBA) and details like surogacy
+        ☐ UI to view an individual match and the scouting for each team (for admins there can be a link to audit the data for this match)
+        ☐ API routes to get the list of upcoming matches
+        ☐ API routes to get the scouting data for a match
+    Teams:
+        ☐ UI to view all the teams at the current event
+        ☐ UI to view an individual team's stats (and all of it's matches)
+        ☐ API routes to get a list of the teams at an event
+        ☐ APi routes to get the stats for a team at an event
+
+Scouting:
+    Event Attendence (Experimental):
+        ☐ UI for scouts to sign in as present to the current event
+        ☐ API routes for scouts to sign in as present to an event (Updates the scouting pool)
+        ☐ Push notification to remind users to sign in
+        ☐ Option to not use this featute at all (to save implementation time)
+    Scouting Assignments:
+        ☐ UI to view your upcomming assignments (and completed assignments which are not editable) for the current event
+            ☐ Open a scouting assignment and start scouting
+            ☐ Implementation of form layout
+            ☐ Match timer to automatically track cycle times
+            ☐ "Lock-In" Button
+        ☐ API routes for getting previous and upcoming matches
+        ☐ API routes to get the scouting form for a match
+        ☐ API routes to auto save match scouting data
+        ☐ API routes to submit and lock-in scouting data
+    Event schedule:
+        ☐ UI for members to view all the current event's matches and who is scouting them
+        ☐ UI for members to view the overall event schedule (pulled from TBA) if applicable
+        ☐ API routes to get all scouting matches
+        ☐ API routes to get the overall schedule of an event
+
+Organization Admin:
+    Invitation codes: 
+        ☐ API routes for creating an invite code (without email)
+            ☐ Options like max number of uses, expiration length, etc
+        ☐ API routes for accepting an invite code
+        ☐ UI for creating user invite codes (in manage members page)
+    Member management: 
+        ☐ API routes for getting all users of an organization 
+            ☐ Check for permissions (Non-members of an organization should not be able to see data of users not also in that organization)
+            ☐ Restrict the data provided (User's should not have access to private data when requesting user's other than themselves)
+        ☐ API routes for removing users
+        ☐ API routes for modifying user permissions/role
+        ☐ UI for managing members
+    Attendence Management:
+        ☐ UI to view the attendence for events
+        ☐ UI to manually sign members in and out to update the scouting pool
+        ☐ API routes for getting the attendence for an event
+        ☐ API routes to manage member attendence
+    Settings page: 
+        ☐ API routes for changing organization settings
+        ☐ UI for managing organization settings
+    Event management:
+        ☐ UI to manage upcoming events
+            ☐ Automatically scrape from TBA
+            ☐ Option to create your own
+        ☐ UI to start an event (set as the current event)
+        TBA Events:
+            ☐ API routes to add events from TBA
+        Custom Events:
+            ☐ API routes to create events
+            ☐ API routes to edit custom events
+        ☐ API routes to remove events
+        ☐ API routes to start an event (set as the current event)
+    Form management:
+        ☐ Create a system to manage scouting forms
+            ☐ Match forms
+            ☐ Pit forms
+
+        Should have the flexibility to add custom data fields with lots of built in types
+        Default preset forms should be provided for different games
+        
+        This system is mostly TBD so far
+    Assignment scheduling:
+        ☐ UI for managing scouting assignments for events
+            ☐ Automatically create new schedule
+            ☐ Manually create a schedule
+                ☐ Auto save?
+            ☐ Delete schedule
+            ☐ Manually edit schedule
+            ☐ Force a recomputation of the scouting schedule
+        ☐ API routes for automatically creating a schedule for a given event
+        ☐ API routes for manually creating a schedule for a given event
+        ☐ API routes for deleting a schedule
+        ☐ API routes for modifying a schedule's metadata
+        ☐ API routes for adding and removing frames
+        ☐ API routes for editing frames
+            ☐ Assigned users
+            ☐ Timing
+            ☐ Teams playing
+        ☐ Cron jobs for automatically notifying users when their match is about to start
+            ☐ Sync with timing from TBA, but adjust based on certain factors
+            ☐ Don't send a notification if the user has an active session open
+        ☐ Automatically adjust scouting schedules based on Event Attendence
+    Scouting Audit:
+        ☐ UI for viewing efficiency of individual scouters
+            ☐ Matches scouted per person
+            ☐ Quality of calculated point totals (compared to TBA)
+            ☐ Amount of qualitative data provided by individual scouts
+            ☐ View scouting data collected by an individual
+        ☐ UI for editing scouting data after it has been collected
+        ☐ API routes for aggregating audit data
+        ☐ API routes editing scouting data
