@@ -18,31 +18,31 @@ const NAV_DATA = [
     {
         title: 'View Data',
         links: [
-            { href: '/dashboard/drive_team', icon: RiLayoutGridFill, text: 'Drive Team Dashboard' },
-            { href: '/dashboard/rankings', icon: MdLeaderboard, text: 'Current Rankings' },
-            { href: '/dashboard/teams', icon: FaUsers, text: 'Teams' },
-            { href: '/dashboard/matches', icon: GrGamepad, text: 'Matches' },
+            { href: '/dashboard/orgs/:id/drive_team', icon: RiLayoutGridFill, text: 'Drive Team Dashboard' },
+            { href: '/dashboard/orgs/:id/rankings', icon: MdLeaderboard, text: 'Current Rankings' },
+            { href: '/dashboard/orgs/:id/teams', icon: FaUsers, text: 'Teams' },
+            { href: '/dashboard/orgs/:id/matches', icon: GrGamepad, text: 'Matches' },
         ],
     },
     {
         title: 'Scouting',
         links: [
-            { href: '/dashboard/attendance', icon: MdChecklist, text: 'Event Attendance' },
-            { href: '/dashboard/assignments', icon: MdAssignment, text: 'Scouting Assignments' },
-            { href: '/dashboard/schedule', icon: AiOutlineSchedule, text: 'Event Schedule' },
+            { href: '/dashboard/orgs/:id/attendance', icon: MdChecklist, text: 'Event Attendance' },
+            { href: '/dashboard/orgs/:id/assignments', icon: MdAssignment, text: 'Scouting Assignments' },
+            { href: '/dashboard/orgs/:id/schedule', icon: AiOutlineSchedule, text: 'Event Schedule' },
         ],
     },
     {
         title: 'Organization Admin',
         links: [
-            { href: '/dashboard/manage_members', icon: FaUsersCog, text: 'Manage Members' },
-            { href: '/dashboard/manage_events', icon: RiCalendarEventLine, text: 'Manage Events' },
-            { href: '/dashboard/manage_forms', icon: FaClipboardList, text: 'Manage Forms' },
-            { href: '/dashboard/schedule_assignments', icon: MdSchedule, text: 'Schedule Assignments' },
-            { href: '/dashboard/scouting_audit', icon: AiOutlineAudit, text: 'Scouting Audit' },
-            { href: '/dashboard/organization_settings', icon: MdBusiness, text: 'Organization Settings' },
+            { href: '/dashboard/orgs/:id/manage_members', icon: FaUsersCog, text: 'Manage Members' },
+            { href: '/dashboard/orgs/:id/manage_events', icon: RiCalendarEventLine, text: 'Manage Events' },
+            { href: '/dashboard/orgs/:id/manage_forms', icon: FaClipboardList, text: 'Manage Forms' },
+            { href: '/dashboard/orgs/:id/schedule_assignments', icon: MdSchedule, text: 'Schedule Assignments' },
+            { href: '/dashboard/orgs/:id/scouting_audit', icon: AiOutlineAudit, text: 'Scouting Audit' },
+            { href: '/dashboard/orgs/:id/organization_settings', icon: MdBusiness, text: 'Organization Settings' },
         ],
-    }
+    },
 ]
 
 export interface NavProps {
@@ -61,11 +61,12 @@ const Nav = ({ organizations, selectedOrganization }: NavProps) => {
                     <NavSection title={title} key={title}>
                         {links.map(({ href, icon, text }) => (
                             <NavLink
-                                href={href}
+                                href={href.replace(':id', selectedOrganization.id)}
                                 icon={icon}
                                 key={text}
                                 active={
-                                    href === pathname || (pathname === '/dashboard' && href === '/dashboard/drive_team')
+                                    href === pathname ||
+                                    (pathname === '/dashboard' && href === '/dashboard/orgs/:id/drive_team')
                                 }>
                                 {text}
                             </NavLink>
