@@ -1,5 +1,4 @@
-General:
-    ☐ Polish up the UI
+General:    
     Refactor UI into reusable components (reduce code duplication in styles):
         ☐ Text componet
         ☐ Link component
@@ -43,6 +42,12 @@ Authentication:
     Security:
         ☐ CSRF cookie to prevent against malicious cross site requests @high
 
+User Flow:
+        ✔ UI for new users to join an organization or create one
+    Organization Creation:
+        ✔ UI for creating an organization
+        ✔ API routes for creating organizations
+    
 Data Viewing:
     Drive Team Dashboard:
         ☐ UI to show the next match that our team is playing in
@@ -90,10 +95,13 @@ Scouting:
 
 Organization Admin:
     Invitation codes: 
+        ☐ UI for inviting a user via email
+        ☐ UI for creating user invite codes (in manage members page)
+        ✔ API routes for inviting a user via email
+        ✔ API routes for accepting an invitation via email
         ☐ API routes for creating an invite code (without email)
             ☐ Options like max number of uses, expiration length, etc
-        ☐ API routes for accepting an invite code
-        ☐ UI for creating user invite codes (in manage members page)
+        ☐ API routes for accepting an invitation code
     Member management: 
         ☐ API routes for getting all users of an organization 
             ☐ Check for permissions (Non-members of an organization should not be able to see data of users not also in that organization)
@@ -109,6 +117,9 @@ Organization Admin:
     Settings page: 
         ☐ API routes for changing organization settings
         ☐ UI for managing organization settings
+        Deletion:
+            ☐ UI for deleting an organization
+            ☐ API routes for deleting an organization
     Event management:
         ☐ UI to manage upcoming events
             ☐ Automatically scrape from TBA
