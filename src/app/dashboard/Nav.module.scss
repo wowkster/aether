@@ -13,28 +13,6 @@
     overflow-y: auto;
     overflow-x: hidden;
 
-    /* width */
-    &::-webkit-scrollbar {
-        width: 0.375rem;
-    }
-
-    /* Track */
-    &::-webkit-scrollbar-track {
-        border-radius: 1rem;
-        background: var(--theme-background-secondary);
-    }
-
-    /* Handle */
-    &::-webkit-scrollbar-thumb {
-        border-radius: 1rem;
-        background: var(--theme-background-tertiary);
-    }
-
-    /* Handle on hover */
-    &::-webkit-scrollbar-thumb:hover {
-        background: var(--theme-background-quaternary);
-    }
-
     &_section {
         display: flex;
         flex-direction: column;
