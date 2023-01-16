@@ -19,13 +19,17 @@ export const FlexColumn: FC<{
 
 export const FlexRow: FC<{
     gap?: number
+    justifyContent?: 'flex-start' | 'flex-end' | 'center' | 'space-between' | 'space-around' | 'space-evenly'
+    alignItems?: 'flex-start' | 'flex-end' | 'center' | 'baseline'
     children?: React.ReactNode
-}> = ({ gap = 1, children }) => {
+}> = ({ gap = 1, alignItems = 'flex-start', justifyContent = 'flex-start', children }) => {
     return (
         <div
             className={styles.flex_row}
             style={{
                 gap: `${gap}rem`,
+                justifyContent,
+                alignItems,
             }}>
             {children}
         </div>
