@@ -54,6 +54,8 @@
                 color: white;
                 position: relative;
                 z-index: 100;
+                width: 100%;
+                height: 2rem;
 
                 &:hover {
                     color: white;
@@ -70,11 +72,11 @@
                     padding: 0.875rem 1rem;
                     left: -1rem;
                     width: 100%;
-                    height: 100%;
+                    height: calc(100% - 0.75rem);
                     z-index: -1;
                     border-radius: 1rem;
 
-                    box-shadow: 0 0 1rem 0 rgb(var(--theme-blue-rgb) / 0.75);
+                    box-shadow: 0 0 0.875rem 0 rgb(var(--theme-blue-rgb) / 0.75);
                 }
             }
         }
