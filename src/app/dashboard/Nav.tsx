@@ -65,7 +65,7 @@ const Nav = ({ organizations, selectedOrganization }: NavProps) => {
                                 icon={icon}
                                 key={text}
                                 active={
-                                    href === pathname ||
+                                    href.replace(':id', selectedOrganization.id) === pathname ||
                                     (pathname === '/dashboard' && href === '/dashboard/orgs/:id/drive_team')
                                 }>
                                 {text}
